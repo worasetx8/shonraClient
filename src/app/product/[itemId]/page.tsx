@@ -16,10 +16,21 @@ interface Product {
   price: number;
   image_url: string;
   shop_name: string;
+  shop_id?: string;
   offer_link: string;
   rating_star: number;
   sales_count: number;
   discount_rate: number;
+  commission_rate?: number;
+  commission_amount?: number;
+  seller_commission_rate?: number;
+  shopee_commission_rate?: number;
+  price_min?: number;
+  price_max?: number;
+  product_link?: string;
+  period_start_time?: number;
+  period_end_time?: number;
+  campaign_active?: boolean;
 }
 
 interface Category {
@@ -53,6 +64,7 @@ export default function ProductDetailPage() {
   const [websiteName, setWebsiteName] = useState<string>("SHONRA");
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isSaving, setIsSaving] = useState(false);
 
   // Memoize related products to avoid recalculation
   const relatedProducts = useMemo(() => {
@@ -185,6 +197,73 @@ export default function ProductDetailPage() {
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  // Handle Shop Now click - save product and navigate
+  const handleShopNow = useCallback(async (e: React.MouseEvent) => {
+    if (!product) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isSaving) return;
+
+    setIsSaving(true);
+
+    // Prepare product data for saving
+    // Convert commission_rate from percentage to decimal if needed
+    let commissionRateDecimal = 0;
+    if (product.commission_rate !== undefined) {
+      commissionRateDecimal = product.commission_rate > 1 ? product.commission_rate / 100 : product.commission_rate;
+    }
+
+    const productData = {
+      itemId: product.item_id,
+      productName: product.product_name,
+      shopName: product.shop_name || '',
+      shopId: product.shop_id || '',
+      price: product.price,
+      priceMin: product.price_min || product.price,
+      priceMax: product.price_max || product.price,
+      commissionRate: commissionRateDecimal,
+      sellerCommissionRate: product.seller_commission_rate || commissionRateDecimal,
+      shopeeCommissionRate: product.shopee_commission_rate || 0,
+      commission: product.commission_amount || 0,
+      imageUrl: product.image_url,
+      productLink: product.product_link || product.offer_link,
+      offerLink: product.offer_link,
+      ratingStar: product.rating_star || 0,
+      sold: product.sales_count || 0,
+      discountRate: product.discount_rate || 0,
+      periodStartTime: product.period_start_time || 0,
+      periodEndTime: product.period_end_time || 0,
+      campaignActive: product.campaign_active !== undefined ? product.campaign_active : false,
+      is_flash_sale: false,
+    };
+
+    // Navigate immediately to avoid popup blocker
+    window.location.href = product.offer_link;
+
+    // Save product in background using sendBeacon (guaranteed delivery)
+    try {
+      const blob = new Blob([JSON.stringify(productData)], { type: 'application/json' });
+      const sent = navigator.sendBeacon('/api/products/save-from-frontend', blob);
+      
+      if (!sent) {
+        // Fallback to fetch if sendBeacon fails (rare)
+        console.warn('sendBeacon failed, using fetch fallback');
+        fetch('/api/products/save-from-frontend', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(productData),
+          keepalive: true,
+        }).catch(err => console.error('Fetch fallback error:', err));
+      }
+    } catch (error) {
+      console.error('Error saving product:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [product, isSaving]);
 
   // Format functions
   const formatPrice = useCallback((price: number) => {
@@ -533,14 +612,13 @@ export default function ProductDetailPage() {
                       </div>
                     )}
                   </div>
-                  <a
-                    href={product.offer_link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 lg:py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm lg:text-base"
+                  <button
+                    onClick={handleShopNow}
+                    disabled={isSaving}
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 lg:py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm lg:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <ShoppingCart size={18} /> ซื้อที่ Shopee
-                  </a>
+                    <ShoppingCart size={18} /> {isSaving ? 'กำลังบันทึก...' : 'ซื้อที่ Shopee'}
+                  </button>
                   <div className="text-xs lg:text-sm text-gray-600">ร้าน: {product.shop_name}</div>
                 </div>
               </div>

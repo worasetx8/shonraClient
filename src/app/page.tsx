@@ -1029,8 +1029,10 @@ export default function NewHomePage() {
       pendingSearchRef.current = null;
       
       if (shopeeOnly) {
+        // Search Shopee only (from product detail page redirect)
         handleSearchShopeeOnly(query);
       } else {
+        // Normal search (database first, then Shopee if needed)
         handleSearch(query);
       }
     }

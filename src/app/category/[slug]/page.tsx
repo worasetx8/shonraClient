@@ -322,6 +322,12 @@ export default function CategoryPage() {
               is_flash_sale: false,
               from_shopee: true, // Mark as Shopee search result
               updated_at: new Date().toISOString(),
+              // Add missing fields for saving product
+              periodStartTime: item.periodStartTime || 0,
+              periodEndTime: item.periodEndTime || 0,
+              campaignActive: item.campaignActive !== undefined ? item.campaignActive : false,
+              sellerCommissionRate: item.sellerCommissionRate || commissionRateDecimal,
+              shopeeCommissionRate: item.shopeeCommissionRate || 0,
             };
           })
           .filter((item: Product) => item.price > 0);
@@ -660,6 +666,12 @@ export default function CategoryPage() {
                   commission: product.commission_amount,
                   fromShopee: product.from_shopee,
                   commissionRateOriginal: product.commission_rate_original,
+                  // Add missing fields for Shopee products
+                  periodStartTime: (product as any).periodStartTime || 0,
+                  periodEndTime: (product as any).periodEndTime || 0,
+                  campaignActive: (product as any).campaignActive !== undefined ? (product as any).campaignActive : false,
+                  sellerCommissionRate: (product as any).sellerCommissionRate,
+                  shopeeCommissionRate: (product as any).shopeeCommissionRate,
                 }}
               />
             ))}
