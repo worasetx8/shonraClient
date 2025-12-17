@@ -74,7 +74,7 @@ export default function CategoryPage() {
       setError(null);
 
       try {
-        // Fetch categories
+        // Fetch categories (goes through Next.js API route which proxies to /api/categories/public)
         const catResponse = await fetch('/api/categories');
         const catData = await catResponse.json();
         

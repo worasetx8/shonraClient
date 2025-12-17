@@ -87,7 +87,7 @@ export default function ProductDetailPage() {
       try {
         // Fetch product by itemId directly (more efficient)
         const [catResp, prodResp, settingsResp, relatedProdResp] = await Promise.all([
-          fetch("/api/categories"),
+          fetch("/api/categories"), // This goes through Next.js API route which proxies to /api/categories/public
           fetch(`/api/products/item/${itemId}`),
           fetch("/api/settings"),
           // Fetch related products (same category, limit to reasonable number)
