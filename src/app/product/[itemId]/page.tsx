@@ -85,17 +85,29 @@ export default function ProductDetailPage() {
       setLoading(true);
       setError(null);
       try {
-        const [catResp, prodResp, settingsResp] = await Promise.all([
+        // Fetch product by itemId directly (more efficient)
+        const [catResp, prodResp, settingsResp, relatedProdResp] = await Promise.all([
           fetch("/api/categories"),
-          fetch("/api/products/public?limit=1000"),
+          fetch(`/api/products/item/${itemId}`),
           fetch("/api/settings"),
+          // Fetch related products (same category, limit to reasonable number)
+          fetch("/api/products/public?limit=100"),
         ]);
 
         if (!isMounted) return;
 
+        // Check if product response is ok
+        if (!prodResp.ok) {
+          const errorData = await prodResp.json().catch(() => ({}));
+          setError(errorData.message || errorData.error || `ไม่พบสินค้า (${prodResp.status})`);
+          setLoading(false);
+          return;
+        }
+
         const catData = await catResp.json();
         const prodData = await prodResp.json();
         const settingsData = await settingsResp.json();
+        const relatedProdData = await relatedProdResp.json();
 
         if (!isMounted) return;
 
@@ -104,21 +116,34 @@ export default function ProductDetailPage() {
           setCategories(activeCategories);
         }
 
-        if (prodData.success && Array.isArray(prodData.data)) {
-          const found = prodData.data.find((p: Product) => p.item_id === itemId);
-          if (!found) {
-            setError("ไม่พบสินค้าที่คุณค้นหา");
-            setLoading(false);
-            return;
-          }
+        // Handle product data
+        if (prodData.success && prodData.data) {
+          const found = prodData.data;
           setProduct(found);
-          setProducts(prodData.data);
 
           // Set current category from product
           if (catData.success && Array.isArray(catData.data)) {
             const cat = catData.data.find((c: Category) => c.id === found.category_id) || null;
             setCurrentCategory(cat);
           }
+
+          // Set related products (for related products section)
+          if (relatedProdData.success && Array.isArray(relatedProdData.data)) {
+            // Filter to same category and exclude current product
+            const related = relatedProdData.data.filter(
+              (p: Product) => p.category_id === found.category_id && p.item_id !== found.item_id
+            );
+            setProducts(related);
+          } else {
+            // If related products fetch failed, set empty array
+            setProducts([]);
+          }
+        } else {
+          // Product not found or error
+          const errorMessage = prodData.message || prodData.error || "ไม่พบสินค้าที่คุณค้นหา";
+          setError(errorMessage);
+          setLoading(false);
+          return;
         }
 
         if (settingsData.success && settingsData.data) {
