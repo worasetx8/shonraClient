@@ -213,30 +213,32 @@ export default function ProductDetailPage() {
     // Convert commission_rate from percentage to decimal if needed
     let commissionRateDecimal = 0;
     if (product.commission_rate !== undefined) {
-      commissionRateDecimal = product.commission_rate > 1 ? product.commission_rate / 100 : product.commission_rate;
+      const rate = typeof product.commission_rate === 'string' ? parseFloat(product.commission_rate) : product.commission_rate;
+      commissionRateDecimal = rate > 1 ? rate / 100 : rate;
     }
 
+    // Ensure all numeric values are numbers, not strings
     const productData = {
-      itemId: product.item_id,
+      itemId: String(product.item_id), // Ensure itemId is string
       productName: product.product_name,
       shopName: product.shop_name || '',
-      shopId: product.shop_id || '',
-      price: product.price,
-      priceMin: product.price_min || product.price,
-      priceMax: product.price_max || product.price,
+      shopId: product.shop_id ? String(product.shop_id) : '',
+      price: typeof product.price === 'string' ? parseFloat(product.price) : product.price,
+      priceMin: product.price_min ? (typeof product.price_min === 'string' ? parseFloat(product.price_min) : product.price_min) : product.price,
+      priceMax: product.price_max ? (typeof product.price_max === 'string' ? parseFloat(product.price_max) : product.price_max) : product.price,
       commissionRate: commissionRateDecimal,
-      sellerCommissionRate: product.seller_commission_rate || commissionRateDecimal,
-      shopeeCommissionRate: product.shopee_commission_rate || 0,
-      commission: product.commission_amount || 0,
+      sellerCommissionRate: product.seller_commission_rate ? (typeof product.seller_commission_rate === 'string' ? parseFloat(product.seller_commission_rate) : product.seller_commission_rate) : commissionRateDecimal,
+      shopeeCommissionRate: product.shopee_commission_rate ? (typeof product.shopee_commission_rate === 'string' ? parseFloat(product.shopee_commission_rate) : product.shopee_commission_rate) : 0,
+      commission: product.commission_amount ? (typeof product.commission_amount === 'string' ? parseFloat(product.commission_amount) : product.commission_amount) : 0,
       imageUrl: product.image_url,
       productLink: product.product_link || product.offer_link,
       offerLink: product.offer_link,
-      ratingStar: product.rating_star || 0,
-      sold: product.sales_count || 0,
-      discountRate: product.discount_rate || 0,
-      periodStartTime: product.period_start_time || 0,
-      periodEndTime: product.period_end_time || 0,
-      campaignActive: product.campaign_active !== undefined ? product.campaign_active : false,
+      ratingStar: product.rating_star ? (typeof product.rating_star === 'string' ? parseFloat(product.rating_star) : product.rating_star) : 0,
+      sold: product.sales_count ? (typeof product.sales_count === 'string' ? parseInt(product.sales_count) : product.sales_count) : 0,
+      discountRate: product.discount_rate ? (typeof product.discount_rate === 'string' ? parseFloat(product.discount_rate) : product.discount_rate) : 0,
+      periodStartTime: product.period_start_time ? (typeof product.period_start_time === 'string' ? parseInt(product.period_start_time) : product.period_start_time) : 0,
+      periodEndTime: product.period_end_time ? (typeof product.period_end_time === 'string' ? parseInt(product.period_end_time) : product.period_end_time) : 0,
+      campaignActive: product.campaign_active !== undefined ? Boolean(product.campaign_active) : false,
       is_flash_sale: false,
     };
 

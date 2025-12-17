@@ -79,27 +79,28 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
       ? product.sellerCommissionRate 
       : commissionRateDecimal;
     
+    // Ensure all numeric values are numbers, not strings
     const productData = {
-      itemId: product.itemId,
+      itemId: String(product.itemId), // Ensure itemId is string
       productName: product.productName,
       shopName: product.shopName || '',
-      shopId: product.shopId || '',
-      price: product.price,
-      priceMin: product.priceMin,
-      priceMax: product.priceMax,
+      shopId: product.shopId ? String(product.shopId) : '',
+      price: typeof product.price === 'string' ? parseFloat(product.price) : product.price,
+      priceMin: product.priceMin ? (typeof product.priceMin === 'string' ? parseFloat(product.priceMin) : product.priceMin) : product.price,
+      priceMax: product.priceMax ? (typeof product.priceMax === 'string' ? parseFloat(product.priceMax) : product.priceMax) : product.price,
       commissionRate: commissionRateDecimal,
-      sellerCommissionRate: sellerCommissionRate,
-      shopeeCommissionRate: product.shopeeCommissionRate || 0,
-      commission: product.commission || 0,
-        imageUrl: product.imageUrl,
-        productLink: product.productLink || product.offerLink,
-        offerLink: product.offerLink,
-        ratingStar: product.ratingStar || 0,
-        sold: product.salesCount || 0,
-        discountRate: product.priceDiscountRate || 0,
-      periodStartTime: product.periodStartTime !== undefined ? product.periodStartTime : 0,
-      periodEndTime: product.periodEndTime !== undefined ? product.periodEndTime : 0,
-      campaignActive: product.campaignActive !== undefined ? product.campaignActive : false,
+      sellerCommissionRate: typeof sellerCommissionRate === 'string' ? parseFloat(sellerCommissionRate) : sellerCommissionRate,
+      shopeeCommissionRate: product.shopeeCommissionRate ? (typeof product.shopeeCommissionRate === 'string' ? parseFloat(product.shopeeCommissionRate) : product.shopeeCommissionRate) : 0,
+      commission: product.commission ? (typeof product.commission === 'string' ? parseFloat(product.commission) : product.commission) : 0,
+      imageUrl: product.imageUrl,
+      productLink: product.productLink || product.offerLink,
+      offerLink: product.offerLink,
+      ratingStar: product.ratingStar ? (typeof product.ratingStar === 'string' ? parseFloat(product.ratingStar) : product.ratingStar) : 0,
+      sold: product.salesCount ? (typeof product.salesCount === 'string' ? parseInt(product.salesCount) : product.salesCount) : 0,
+      discountRate: product.priceDiscountRate ? (typeof product.priceDiscountRate === 'string' ? parseFloat(product.priceDiscountRate) : product.priceDiscountRate) : 0,
+      periodStartTime: product.periodStartTime !== undefined ? (typeof product.periodStartTime === 'string' ? parseInt(product.periodStartTime) : product.periodStartTime) : 0,
+      periodEndTime: product.periodEndTime !== undefined ? (typeof product.periodEndTime === 'string' ? parseInt(product.periodEndTime) : product.periodEndTime) : 0,
+      campaignActive: product.campaignActive !== undefined ? Boolean(product.campaignActive) : false,
       is_flash_sale: false,
     };
 
