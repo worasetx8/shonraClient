@@ -23,7 +23,9 @@ export function getBackendUrl(): string {
     return backendUrl;
   }
   // Client-side: Use NEXT_PUBLIC_BACKEND_URL
-  return process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3002";
+  // In production, NEXT_PUBLIC_BACKEND_URL should always be set
+  // Fallback to production URL if not set (better than localhost)
+  return process.env.NEXT_PUBLIC_BACKEND_URL || (process.env.NODE_ENV === 'production' ? "https://api.shonra.com" : "http://localhost:3002");
 }
 
 /**

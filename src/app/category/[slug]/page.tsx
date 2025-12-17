@@ -106,8 +106,9 @@ export default function CategoryPage() {
           setCurrentCategory(category);
 
           // Fetch products and settings in parallel
+          // Send category_id parameter to filter on backend and use high limit to get all products
           const [prodResponse, settingsResponse] = await Promise.all([
-            fetch('/api/products/public'),
+            fetch(`/api/products/public?category_id=${category.id}&limit=10000`),
             fetch('/api/settings')
           ]);
 
@@ -115,6 +116,8 @@ export default function CategoryPage() {
 
           const prodData = await prodResponse.json();
           if (prodData.success && Array.isArray(prodData.data)) {
+            // Products are already filtered by category_id on the backend
+            // But keep filter as fallback in case backend doesn't filter properly
             const categoryProducts = prodData.data.filter(
               (prod: Product) => prod.category_id === category.id
             );

@@ -170,24 +170,11 @@ export default function NewHomePage() {
         }
         
         const processedBanners = bannersData.map((banner: any) => {
-          const imageUrl = banner.image_url;
-          
-          // Check if image URL is base64 data URI
-          const isBase64 = imageUrl && imageUrl.startsWith('data:image/');
-          
-          // Convert relative path to full URL if needed
-          let fullImageUrl = imageUrl;
-          if (!isBase64 && imageUrl && !imageUrl.startsWith('http')) {
-            // If it's a relative path like /api/uploads/..., convert to full backend URL
-            const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3002';
-            fullImageUrl = imageUrl.startsWith('/') 
-              ? `${backendUrl}${imageUrl}`
-              : `${backendUrl}/${imageUrl}`;
-          }
-          
-          // Return image URL without cache-busting (let browser cache handle it)
+          // Image URLs are already normalized by the API route to use Next.js proxy
+          // Relative paths like /api/uploads/banners/... will work with both Next.js Image and regular img tags
+          // since they're proxied through Next.js API routes
           return {
-            image_url: fullImageUrl,
+            image_url: banner.image_url, // Use URL as-is (already normalized by API route)
             target_url: banner.target_url || null,
             alt_text: banner.alt_text || 'Banner Popup',
             open_new_tab: banner.open_new_tab === 1 || banner.open_new_tab === true,
@@ -297,31 +284,21 @@ export default function NewHomePage() {
         const banner = Array.isArray(data.data) ? data.data[0] : data.data;
         
         if (banner && banner.image_url) {
+          // Image URLs are already normalized by the API route to use Next.js proxy
+          // Relative paths like /api/uploads/banners/... will work with regular img tags
+          // since they're proxied through Next.js API routes
           const imageUrl = banner.image_url;
-          
-          // Check if image URL is base64 data URI
-          const isBase64 = imageUrl && imageUrl.startsWith('data:image/');
-          
-          // Convert relative path to full URL if needed
-          let fullImageUrl = imageUrl;
-          if (!isBase64 && imageUrl && !imageUrl.startsWith('http')) {
-            // If it's a relative path like /api/uploads/..., convert to full backend URL
-            const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3002';
-            fullImageUrl = imageUrl.startsWith('/') 
-              ? `${backendUrl}${imageUrl}`
-              : `${backendUrl}/${imageUrl}`;
-          }
           
           // Only update banner if URL actually changed to prevent unnecessary re-renders
           setFlashSaleBanner((prevBanner) => {
             // If banner URL hasn't changed, don't update (prevent re-render)
-            if (prevBanner && prevBanner.image_url === fullImageUrl) {
+            if (prevBanner && prevBanner.image_url === imageUrl) {
               return prevBanner;
             }
             // Update banner key only when URL changes
             setBannerKey(prev => prev + 1);
             return {
-              image_url: fullImageUrl,
+              image_url: imageUrl, // Use URL as-is (already normalized by API route)
               target_url: banner.target_url || null,
               alt_text: banner.alt_text || 'Flash Sale Banner',
               open_new_tab: banner.open_new_tab === 1 || banner.open_new_tab === true,
@@ -1774,6 +1751,8 @@ export default function NewHomePage() {
                   loading="eager"
                   draggable="false"
                   onError={(e) => {
+                    // Handle image loading errors gracefully
+                    console.error('Failed to load flash sale banner image:', flashSaleBanner.image_url);
                     const target = e.currentTarget;
                     target.style.display = 'none';
                     const placeholder = document.createElement('div');
@@ -1970,6 +1949,8 @@ export default function NewHomePage() {
                       loading="eager"
                       draggable="false"
                       onError={(e) => {
+                        // Handle image loading errors gracefully
+                        console.error('Failed to load flash sale banner image:', flashSaleBanner.image_url);
                         // If image fails to load, show placeholder
                         const target = e.currentTarget;
                         target.style.display = 'none';
@@ -1988,6 +1969,8 @@ export default function NewHomePage() {
                     className="w-full h-auto object-cover"
                     loading="eager"
                     onError={(e) => {
+                      // Handle image loading errors gracefully
+                      console.error('Failed to load flash sale banner image:', flashSaleBanner.image_url);
                       // If image fails to load, show placeholder
                       const target = e.currentTarget;
                       target.style.display = 'none';

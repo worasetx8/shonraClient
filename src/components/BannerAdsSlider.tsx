@@ -121,6 +121,13 @@ export default function BannerAdsSlider({ autoPlayInterval = 5000, positionName 
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover"
                 priority={index === 0}
+                onError={(e) => {
+                  // Handle image loading errors gracefully
+                  console.error('Failed to load banner image:', banner.image_url);
+                  // Hide the broken image
+                  const target = e.currentTarget;
+                  target.style.display = 'none';
+                }}
               />
             </div>
           </div>

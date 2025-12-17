@@ -44,6 +44,49 @@ export async function GET(request: NextRequest, { params }: { params: { position
 
     const data = await response.json();
 
+    // Normalize image URLs to use Next.js proxy route for better image optimization
+    // Convert backend image URLs to Next.js proxy URLs
+    if (data.success && data.data) {
+      const normalizeImageUrl = (imageUrl: string | null): string => {
+        if (!imageUrl) return imageUrl || '';
+        
+        // Skip base64 data URIs and external URLs
+        if (imageUrl.startsWith('data:image/') || imageUrl.startsWith('http')) {
+          return imageUrl;
+        }
+        
+        // Convert backend image URLs to Next.js proxy URLs
+        // Backend returns: /api/uploads/banners/filename.png
+        // Convert to: /api/uploads/banners/filename.png (same path, but proxied through Next.js)
+        if (imageUrl.startsWith('/api/uploads/banners/')) {
+          return imageUrl; // Keep as relative path for Next.js Image optimization
+        }
+        
+        // If it's a full backend URL, extract the path
+        if (imageUrl.includes('/api/uploads/banners/')) {
+          const match = imageUrl.match(/\/api\/uploads\/banners\/[^/]+$/);
+          if (match) {
+            return match[0];
+          }
+        }
+        
+        return imageUrl;
+      };
+
+      // Normalize URLs in banner data
+      if (Array.isArray(data.data)) {
+        data.data = data.data.map((banner: any) => ({
+          ...banner,
+          image_url: normalizeImageUrl(banner.image_url)
+        }));
+      } else if (data.data && typeof data.data === 'object') {
+        data.data = {
+          ...data.data,
+          image_url: normalizeImageUrl(data.data.image_url)
+        };
+      }
+    }
+
     // Cache-Control: Use stale-while-revalidate pattern for normal requests
     // For hard refresh, set no-cache to prevent browser caching
     return NextResponse.json(data, {
