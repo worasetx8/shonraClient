@@ -7,7 +7,7 @@ const nextConfig = {
     ignoreBuildErrors: true // Temporarily ignore TS errors to get the dev server running
   },
   images: {
-    domains: ["cf.shopee.co.th", "shopee.co.th", "down-th.img.susercontent.com", "cf.shopee.sg", "shopee.sg"],
+    domains: ["cf.shopee.co.th", "shopee.co.th", "down-th.img.susercontent.com", "cf.shopee.sg", "shopee.sg", "localhost"],
     remotePatterns: [
       {
         protocol: "https",
@@ -20,8 +20,22 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "**.susercontent.com"
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3002",
+        pathname: "/api/uploads/**"
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
+        pathname: "/api/uploads/**"
       }
-    ]
+    ],
+    // Allow unoptimized images for local development
+    unoptimized: process.env.NODE_ENV === "development" ? false : false
   },
   // Enable aggressive caching for static assets
   async headers() {

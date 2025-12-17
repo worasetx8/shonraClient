@@ -121,6 +121,7 @@ export default function BannerAdsSlider({ autoPlayInterval = 5000, positionName 
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover"
                 priority={index === 0}
+                unoptimized={banner.image_url?.startsWith('/api/uploads/')}
                 onError={(e) => {
                   // Handle image loading errors gracefully
                   console.error('Failed to load banner image:', banner.image_url);
