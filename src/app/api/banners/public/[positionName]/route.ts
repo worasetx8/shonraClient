@@ -44,8 +44,8 @@ export async function GET(request: NextRequest, { params }: { params: { position
 
     const data = await response.json();
 
-    // Normalize image URLs to use Next.js proxy route for better image optimization
-    // Convert backend image URLs to Next.js proxy URLs
+    // Normalize image URLs to use absolute backend URL in production
+    // Convert backend image URLs to absolute URLs for direct access
     if (data.success && data.data) {
       const normalizeImageUrl = (imageUrl: string | null): string => {
         if (!imageUrl) return imageUrl || '';
@@ -55,18 +55,20 @@ export async function GET(request: NextRequest, { params }: { params: { position
           return imageUrl;
         }
         
-        // Convert backend image URLs to Next.js proxy URLs
+        // In production, convert relative paths to absolute backend URLs
         // Backend returns: /api/uploads/banners/filename.png
-        // Convert to: /api/uploads/banners/filename.png (same path, but proxied through Next.js)
+        // Convert to: https://api.shonra.com/api/uploads/banners/filename.png
         if (imageUrl.startsWith('/api/uploads/banners/')) {
-          return imageUrl; // Keep as relative path for Next.js Image optimization
+          const backendUrl = getBackendUrl();
+          return `${backendUrl}${imageUrl}`;
         }
         
-        // If it's a full backend URL, extract the path
+        // If it's a full backend URL, extract and use it
         if (imageUrl.includes('/api/uploads/banners/')) {
           const match = imageUrl.match(/\/api\/uploads\/banners\/[^/]+$/);
           if (match) {
-            return match[0];
+            const backendUrl = getBackendUrl();
+            return `${backendUrl}${match[0]}`;
           }
         }
         
