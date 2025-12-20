@@ -50,8 +50,21 @@ export async function GET(request: NextRequest, { params }: { params: { position
       const normalizeImageUrl = (imageUrl: string | null): string => {
         if (!imageUrl) return imageUrl || '';
         
-        // Skip base64 data URIs and external URLs
-        if (imageUrl.startsWith('data:image/') || imageUrl.startsWith('http')) {
+        // Skip base64 data URIs
+        if (imageUrl.startsWith('data:image/')) {
+          return imageUrl;
+        }
+        
+        // Fix URLs that point to frontend domain instead of backend API
+        // Convert https://shonra.com/api/uploads/... to https://api.shonra.com/api/uploads/...
+        if (imageUrl.startsWith('https://shonra.com/api/uploads/') || imageUrl.startsWith('http://shonra.com/api/uploads/')) {
+          const backendUrl = getBackendUrl();
+          const path = imageUrl.replace(/^https?:\/\/shonra\.com/, '');
+          return `${backendUrl}${path}`;
+        }
+        
+        // Skip external URLs that are already correct (pointing to api.shonra.com or other domains)
+        if (imageUrl.startsWith('http') && !imageUrl.includes('shonra.com/api/uploads/')) {
           return imageUrl;
         }
         
