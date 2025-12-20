@@ -114,22 +114,39 @@ export default function BannerAdsSlider({ autoPlayInterval = 5000, positionName 
               className={`relative w-full h-full ${banner.target_url ? 'cursor-pointer' : ''}`}
               onClick={() => handleBannerClick(banner)}
             >
-              <Image
-                src={banner.image_url}
-                alt={banner.alt_text || 'Banner'}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover"
-                priority={index === 0}
-                unoptimized={banner.image_url?.startsWith('/api/uploads/')}
-                onError={(e) => {
-                  // Handle image loading errors gracefully
-                  console.error('Failed to load banner image:', banner.image_url);
-                  // Hide the broken image
-                  const target = e.currentTarget;
-                  target.style.display = 'none';
-                }}
-              />
+              {banner.image_url?.startsWith('/api/uploads/') ? (
+                // Use regular img tag for local API paths (proxied through Next.js API route)
+                <img
+                  src={banner.image_url}
+                  alt={banner.alt_text || 'Banner'}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  onError={(e) => {
+                    // Handle image loading errors gracefully
+                    console.error('Failed to load banner image:', banner.image_url);
+                    // Hide the broken image
+                    const target = e.currentTarget;
+                    target.style.display = 'none';
+                  }}
+                />
+              ) : (
+                // Use Next.js Image for external URLs
+                <Image
+                  src={banner.image_url}
+                  alt={banner.alt_text || 'Banner'}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover"
+                  priority={index === 0}
+                  onError={(e) => {
+                    // Handle image loading errors gracefully
+                    console.error('Failed to load banner image:', banner.image_url);
+                    // Hide the broken image
+                    const target = e.currentTarget;
+                    target.style.display = 'none';
+                  }}
+                />
+              )}
             </div>
           </div>
         ))}
