@@ -81,9 +81,15 @@ export async function fetchFlashSaleProducts(params: { page?: string; limit?: st
 
 /**
  * Fetch banners by position
+ * Use Next.js API route to get normalized URLs (converts relative paths to absolute backend URLs)
  */
 export async function fetchBanners(positionName: string) {
-  return fetchFromBackend(`/api/banners/public/${encodeURIComponent(positionName)}`);
+  const encodedPosition = encodeURIComponent(positionName);
+  const response = await fetch(`/api/banners/public/${encodedPosition}`);
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status}`);
+  }
+  return response.json();
 }
 
 /**
