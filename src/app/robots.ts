@@ -32,55 +32,41 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       // Googlebot - Allow public pages, block sensitive paths
       {
         userAgent: "Googlebot",
-        allow: ["/", "/product/", "/category/"],
+        allow: ["/"],
         disallow: [
           "/api/",
           "/backoffice/",
           "/maintenance/",
           "/not-found",
           "/404",
-          "/_next/",
           "/favicon.ico"
-        ],
-        crawlDelay: 0
+        ]
       },
       // Bingbot - Same as Googlebot
       {
         userAgent: "Bingbot",
-        allow: ["/", "/product/", "/category/"],
+        allow: ["/"],
         disallow: [
           "/api/",
           "/backoffice/",
           "/maintenance/",
           "/not-found",
           "/404",
-          "/_next/",
           "/favicon.ico"
-        ],
-        crawlDelay: 0
+        ]
       },
-      // All other bots - More restrictive with crawl delay
+      // All other bots
       {
         userAgent: "*",
-        allow: ["/", "/product/", "/category/"],
+        allow: ["/"],
         disallow: [
           "/api/",
-          "/api/admin/",
-          "/api/auth/",
-          "/api/shopee/",
-          "/api/ai-seo/",
-          "/api/sync-products",
-          "/api/products/save-from-frontend",
-          "/api/uploads/",
-          "/api/settings",
           "/backoffice/",
           "/maintenance/",
           "/not-found",
           "/404",
-          "/_next/",
           "/favicon.ico"
-        ],
-        crawlDelay: 1
+        ]
       }
     ],
     sitemap: sitemapUrl
