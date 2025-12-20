@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowUp, Star, ShoppingCart, Home, Search, X } from "lucide-react";
+import { ArrowUp, Star, ShoppingCart, Home, Search, X, Store } from "lucide-react";
 import CategorySlider from "@/components/CategorySlider";
 import StructuredData from "@/components/StructuredData";
 
@@ -580,12 +580,18 @@ export default function ProductDetailPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-6 lg:h-full">
             <div className="lg:col-span-8 bg-white p-0 lg:p-6 rounded-none lg:rounded-xl shadow-md lg:overflow-y-auto">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-6">
-                <div className="flex items-start justify-center bg-gray-50 lg:bg-transparent">
+                <div className="flex items-start justify-center bg-gray-50 lg:bg-transparent relative">
                   <img
                     src={product.image_url}
                     alt={product.product_name}
                     className="w-full h-auto lg:max-h-[500px] object-contain"
                   />
+                  {/* Discount Badge - Top Right */}
+                  {product.discount_rate > 0 && (
+                    <div className="absolute top-2 right-2 bg-orange-400 text-white text-xs lg:text-sm font-bold px-2 py-1 rounded-md shadow-lg">
+                      {Math.round(product.discount_rate)}%
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-2.5 lg:space-y-4 p-3 lg:p-0">
                   <h1 className="text-base lg:text-2xl font-bold leading-tight">
@@ -604,7 +610,8 @@ export default function ProductDetailPage() {
                       ขายแล้ว {formatNumber(product.sales_count)}
                     </div>
                   </div>
-                  <div>
+                  {/* Price Section - Left/Right Layout like Product Card */}
+                  <div className="flex items-baseline justify-between gap-2">
                     <div className="text-xl lg:text-3xl font-bold text-red-600">
                       {formatPrice(product.price)}
                     </div>
@@ -614,14 +621,27 @@ export default function ProductDetailPage() {
                       </div>
                     )}
                   </div>
+                  
+                  {/* Shop Name - Prominent Display */}
+                  {product.shop_name && (
+                    <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg">
+                      <Store size={18} className="text-blue-600 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs text-blue-600 font-medium mb-0.5">ร้านค้า</div>
+                        <div className="text-sm lg:text-base font-semibold text-blue-900 truncate">
+                          {product.shop_name}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
                   <button
                     onClick={handleShopNow}
                     disabled={isSaving}
                     className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 lg:py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm lg:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <ShoppingCart size={18} /> {isSaving ? 'กำลังบันทึก...' : 'ซื้อที่ Shopee'}
+                    <ShoppingCart size={18} /> {isSaving ? 'กำลังบันทึก...' : 'Add to Cart'}
                   </button>
-                  <div className="text-xs lg:text-sm text-gray-600">ร้าน: {product.shop_name}</div>
                 </div>
               </div>
             </div>
