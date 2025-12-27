@@ -598,6 +598,7 @@ export default function ProductDetailPage() {
                     className="w-full h-auto lg:max-h-[500px] object-contain"
                     loading="eager"
                     priority
+                    unoptimized={isShopeeImage(product.image_url)}
                   />
                   {/* Discount Badge - Top Right */}
                   {product.discount_rate > 0 && (
@@ -678,6 +679,7 @@ export default function ProductDetailPage() {
                           sizes="128px"
                           alt={p.product_name}
                           loading="lazy"
+                          unoptimized={isShopeeImage(p.image_url)}
                         />
                       </div>
                       <div className="text-xs text-gray-700 line-clamp-2 mb-1">
@@ -704,6 +706,7 @@ export default function ProductDetailPage() {
                           sizes="48px"
                           alt={p.product_name}
                           loading="lazy"
+                          unoptimized={isShopeeImage(p.image_url)}
                         />
                       </div>
                       <div className="flex-1 min-w-0">

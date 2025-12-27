@@ -267,14 +267,15 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product, priority = fal
               width={400}
               height={400}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
-                    }}
-                    loading={priority ? "eager" : "lazy"}
-                    priority={priority}
-                  />
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+              loading={priority ? "eager" : "lazy"}
+              priority={priority}
+              unoptimized={isShopeeImage}
+            />
             
             {/* Discount Badge - Top Right */}
             {hasDiscount && discountRate > 0 && (
@@ -380,22 +381,23 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product, priority = fal
             display="block"
             _hover={{ textDecoration: 'none' }}
           >
-            {/* Image */}
-            <Box position="relative" bg="gray.50" aspectRatio={1} overflow="hidden">
-              <Image
-                src={product.imageUrl}
-                alt={product.productName}
-                width={400}
-                height={400}
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover'
-                }}
-                loading={priority ? "eager" : "lazy"}
-                priority={priority}
-              />
+          {/* Image */}
+          <Box position="relative" bg="gray.50" aspectRatio={1} overflow="hidden">
+            <Image
+              src={product.imageUrl}
+              alt={product.productName}
+              width={400}
+              height={400}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+              loading={priority ? "eager" : "lazy"}
+              priority={priority}
+              unoptimized={isShopeeImage}
+            />
               
               {/* Discount Badge - Top Right */}
               {hasDiscount && discountRate > 0 && (
