@@ -28,12 +28,16 @@ export default function CategorySlider({
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
 
+  // Use requestAnimationFrame to batch DOM reads and avoid forced reflow
   const checkScrollButtons = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
-    }
+    requestAnimationFrame(() => {
+      if (scrollContainerRef.current) {
+        // Batch all DOM reads together
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+        setShowLeftArrow(scrollLeft > 0);
+        setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
+      }
+    });
   };
 
   // Auto-scroll active category to center
@@ -48,30 +52,35 @@ export default function CategorySlider({
       // Wait for layout to be ready - longer delay for mobile
       const timeoutId = setTimeout(() => {
         if (container && activeButton) {
-          if (isMobile) {
-            // On mobile, use scrollIntoView for better compatibility
-            activeButton.scrollIntoView({
-              behavior: (CategorySlider as any).__hasMounted ? 'smooth' : 'auto',
-              block: 'nearest',
-              inline: 'center'
-            });
-          } else {
-            // On desktop, calculate precise center position
-            const containerWidth = container.clientWidth;
-            const buttonLeft = activeButton.offsetLeft;
-            const buttonWidth = activeButton.offsetWidth;
-            const scrollPosition = buttonLeft - (containerWidth / 2) + (buttonWidth / 2);
+          // Use requestAnimationFrame to ensure layout is ready and batch DOM reads
+          requestAnimationFrame(() => {
+            if (isMobile) {
+              // On mobile, use scrollIntoView for better compatibility
+              activeButton.scrollIntoView({
+                behavior: (CategorySlider as any).__hasMounted ? 'smooth' : 'auto',
+                block: 'nearest',
+                inline: 'center'
+              });
+            } else {
+              // On desktop, batch all DOM reads together to avoid forced reflow
+              const containerWidth = container.clientWidth;
+              const buttonLeft = activeButton.offsetLeft;
+              const buttonWidth = activeButton.offsetWidth;
+              const scrollPosition = buttonLeft - (containerWidth / 2) + (buttonWidth / 2);
+              
+              container.scrollTo({ 
+                left: Math.max(0, scrollPosition), 
+                behavior: (CategorySlider as any).__hasMounted ? 'smooth' : 'auto' as ScrollBehavior 
+              });
+            }
             
-            container.scrollTo({ 
-              left: Math.max(0, scrollPosition), 
-              behavior: (CategorySlider as any).__hasMounted ? 'smooth' : 'auto' as ScrollBehavior 
+            (CategorySlider as any).__hasMounted = true;
+            
+            // Update scroll buttons after scroll (use RAF to batch DOM reads)
+            requestAnimationFrame(() => {
+              checkScrollButtons();
             });
-          }
-          
-          (CategorySlider as any).__hasMounted = true;
-          
-          // Update scroll buttons after scroll
-          setTimeout(() => checkScrollButtons(), 100);
+          });
         }
       }, isMobile ? 150 : 50);
       

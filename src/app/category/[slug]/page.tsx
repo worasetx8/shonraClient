@@ -175,18 +175,22 @@ export default function CategoryPage() {
 
   // Combined scroll handler for lazy load and back to top button
   useEffect(() => {
+    // Use requestAnimationFrame to batch DOM reads and avoid forced reflow
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const scrollHeight = document.documentElement.scrollHeight;
-      const windowHeight = window.innerHeight;
-      
-      // Back to top button visibility
-      setShowBackToTop(scrollY > 400);
-      
-      // Lazy load more products
-      if (windowHeight + scrollY >= scrollHeight - 500 && visibleCount < filteredProducts.length) {
-        setVisibleCount(prev => Math.min(prev + 20, filteredProducts.length));
-      }
+      requestAnimationFrame(() => {
+        // Batch all DOM reads together
+        const scrollY = window.scrollY;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const windowHeight = window.innerHeight;
+        
+        // Back to top button visibility
+        setShowBackToTop(scrollY > 400);
+        
+        // Lazy load more products
+        if (windowHeight + scrollY >= scrollHeight - 500 && visibleCount < filteredProducts.length) {
+          setVisibleCount(prev => Math.min(prev + 20, filteredProducts.length));
+        }
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -454,6 +458,47 @@ export default function CategoryPage() {
                     availability: 'https://schema.org/InStock',
                     url: product.offer_link,
                     priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    description: `${product.product_name} - ส่งฟรีทั่วไทย`,
+                    shippingDetails: {
+                      '@type': 'OfferShippingDetails',
+                      shippingRate: {
+                        '@type': 'MonetaryAmount',
+                        value: '0',
+                        currency: 'THB',
+                      },
+                      shippingDestination: {
+                        '@type': 'DefinedRegion',
+                        addressCountry: 'TH',
+                      },
+                      deliveryTime: {
+                        '@type': 'ShippingDeliveryTime',
+                        businessDays: {
+                          '@type': 'OpeningHoursSpecification',
+                          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                        },
+                        cutoffTime: '14:00',
+                        handlingTime: {
+                          '@type': 'QuantitativeValue',
+                          minValue: 1,
+                          maxValue: 3,
+                          unitCode: 'DAY',
+                        },
+                        transitTime: {
+                          '@type': 'QuantitativeValue',
+                          minValue: 1,
+                          maxValue: 5,
+                          unitCode: 'DAY',
+                        },
+                      },
+                    },
+                    hasMerchantReturnPolicy: {
+                      '@type': 'MerchantReturnPolicy',
+                      applicableCountry: 'TH',
+                      returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                      merchantReturnDays: 7,
+                      returnMethod: 'https://schema.org/ReturnByMail',
+                      returnFees: 'https://schema.org/FreeReturn',
+                    },
                     seller: {
                       '@type': 'Organization',
                       name: product.shop_name,

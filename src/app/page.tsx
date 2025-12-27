@@ -1106,11 +1106,15 @@ export default function NewHomePage() {
     const container = flashSaleContainerRef.current;
     if (!container) return;
 
+    // Use requestAnimationFrame to batch DOM reads and avoid forced reflow
     const checkScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      // ถ้ายัง scroll ได้อีก (มีเนื้อหาเพิ่มเติม) และยังไม่ scroll ถึงด้านล่าง
-      const hasMore = scrollHeight > clientHeight && scrollTop + clientHeight < scrollHeight - 10;
-      setHasMoreFlashSale(hasMore);
+      requestAnimationFrame(() => {
+        // Batch all DOM reads together
+        const { scrollTop, scrollHeight, clientHeight } = container;
+        // ถ้ายัง scroll ได้อีก (มีเนื้อหาเพิ่มเติม) และยังไม่ scroll ถึงด้านล่าง
+        const hasMore = scrollHeight > clientHeight && scrollTop + clientHeight < scrollHeight - 10;
+        setHasMoreFlashSale(hasMore);
+      });
     };
 
     // ตรวจสอบเมื่อ scroll
@@ -1143,11 +1147,14 @@ export default function NewHomePage() {
     const container = scrollContainerRef.current;
     if (!container) return;
 
+    // Use requestAnimationFrame to batch DOM reads and avoid forced reflow
     const handleScroll = () => {
-      setShowBackToTop(container.scrollTop > 400);
+      requestAnimationFrame(() => {
+        setShowBackToTop(container.scrollTop > 400);
+      });
     };
 
-    container.addEventListener('scroll', handleScroll);
+    container.addEventListener('scroll', handleScroll, { passive: true });
     return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -1200,6 +1207,47 @@ export default function NewHomePage() {
                     availability: 'https://schema.org/InStock',
                     url: product.offerLink,
                     priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    description: `${product.productName} - ส่งฟรีทั่วไทย`,
+                    shippingDetails: {
+                      '@type': 'OfferShippingDetails',
+                      shippingRate: {
+                        '@type': 'MonetaryAmount',
+                        value: '0',
+                        currency: 'THB',
+                      },
+                      shippingDestination: {
+                        '@type': 'DefinedRegion',
+                        addressCountry: 'TH',
+                      },
+                      deliveryTime: {
+                        '@type': 'ShippingDeliveryTime',
+                        businessDays: {
+                          '@type': 'OpeningHoursSpecification',
+                          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                        },
+                        cutoffTime: '14:00',
+                        handlingTime: {
+                          '@type': 'QuantitativeValue',
+                          minValue: 1,
+                          maxValue: 3,
+                          unitCode: 'DAY',
+                        },
+                        transitTime: {
+                          '@type': 'QuantitativeValue',
+                          minValue: 1,
+                          maxValue: 5,
+                          unitCode: 'DAY',
+                        },
+                      },
+                    },
+                    hasMerchantReturnPolicy: {
+                      '@type': 'MerchantReturnPolicy',
+                      applicableCountry: 'TH',
+                      returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                      merchantReturnDays: 7,
+                      returnMethod: 'https://schema.org/ReturnByMail',
+                      returnFees: 'https://schema.org/FreeReturn',
+                    },
                     ...(product.shopName && {
                       seller: {
                         '@type': 'Organization',
@@ -1240,6 +1288,47 @@ export default function NewHomePage() {
                     priceCurrency: 'THB',
                     availability: 'https://schema.org/InStock',
                     priceValidUntil: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    description: `${product.productName} - ส่งฟรีทั่วไทย`,
+                    shippingDetails: {
+                      '@type': 'OfferShippingDetails',
+                      shippingRate: {
+                        '@type': 'MonetaryAmount',
+                        value: '0',
+                        currency: 'THB',
+                      },
+                      shippingDestination: {
+                        '@type': 'DefinedRegion',
+                        addressCountry: 'TH',
+                      },
+                      deliveryTime: {
+                        '@type': 'ShippingDeliveryTime',
+                        businessDays: {
+                          '@type': 'OpeningHoursSpecification',
+                          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                        },
+                        cutoffTime: '14:00',
+                        handlingTime: {
+                          '@type': 'QuantitativeValue',
+                          minValue: 1,
+                          maxValue: 3,
+                          unitCode: 'DAY',
+                        },
+                        transitTime: {
+                          '@type': 'QuantitativeValue',
+                          minValue: 1,
+                          maxValue: 5,
+                          unitCode: 'DAY',
+                        },
+                      },
+                    },
+                    hasMerchantReturnPolicy: {
+                      '@type': 'MerchantReturnPolicy',
+                      applicableCountry: 'TH',
+                      returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                      merchantReturnDays: 7,
+                      returnMethod: 'https://schema.org/ReturnByMail',
+                      returnFees: 'https://schema.org/FreeReturn',
+                    },
                   },
                 },
               })),
@@ -1750,6 +1839,8 @@ export default function NewHomePage() {
                   src={flashSaleBanner.image_url} 
                   alt={flashSaleBanner.alt_text || "Flash Sale Banner"}
                   className="w-full h-auto object-cover pointer-events-none"
+                  width={320}
+                  height={180}
                   loading="eager"
                   draggable="false"
                   onError={(e) => {
@@ -1770,6 +1861,8 @@ export default function NewHomePage() {
                 src={flashSaleBanner.image_url} 
                 alt={flashSaleBanner.alt_text || "Flash Sale Banner"}
                 className="w-full h-auto object-cover"
+                width={320}
+                height={180}
                 loading="eager"
                 onError={(e) => {
                   const target = e.currentTarget;
@@ -1948,6 +2041,8 @@ export default function NewHomePage() {
                       src={flashSaleBanner.image_url} 
                       alt={flashSaleBanner.alt_text || "Flash Sale Banner"}
                       className="w-full h-auto object-cover pointer-events-none"
+                      width={640}
+                      height={360}
                       loading="eager"
                       draggable="false"
                       onError={(e) => {
@@ -1969,6 +2064,8 @@ export default function NewHomePage() {
                     src={flashSaleBanner.image_url} 
                     alt={flashSaleBanner.alt_text || "Flash Sale Banner"}
                     className="w-full h-auto object-cover"
+                    width={640}
+                    height={360}
                     loading="eager"
                     onError={(e) => {
                       // Handle image loading errors gracefully

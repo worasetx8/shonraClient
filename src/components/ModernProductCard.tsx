@@ -3,7 +3,6 @@
 import React, { useState, useEffect, memo, useRef } from 'react';
 import {
   Box,
-  Image,
   Text,
   VStack,
   HStack,
@@ -12,6 +11,7 @@ import {
   Button
 } from '@chakra-ui/react';
 import { StarIcon } from '@chakra-ui/icons';
+import Image from 'next/image';
 
 interface ProductCardProps {
   product: {
@@ -255,13 +255,18 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
           _hover={{ textDecoration: 'none' }}
         >
           {/* Image */}
-          <Box position="relative" bg="gray.50">
+          <Box position="relative" bg="gray.50" aspectRatio={1} overflow="hidden">
             <Image
               src={product.imageUrl}
               alt={product.productName}
-              width="100%"
-              aspectRatio={1}
-              objectFit="cover"
+              width={400}
+              height={400}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
               loading="lazy"
             />
             
@@ -278,6 +283,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 px={2}
                 py={1}
                 borderRadius="md"
+                zIndex={1}
               >
                 {Math.round(discountRate)}%
               </Box>
@@ -368,13 +374,18 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
             _hover={{ textDecoration: 'none' }}
           >
             {/* Image */}
-            <Box position="relative" bg="gray.50">
+            <Box position="relative" bg="gray.50" aspectRatio={1} overflow="hidden">
               <Image
                 src={product.imageUrl}
                 alt={product.productName}
-                width="100%"
-                aspectRatio={1}
-                objectFit="cover"
+                width={400}
+                height={400}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
+                }}
                 loading="lazy"
               />
               
@@ -391,6 +402,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   px={2}
                   py={1}
                   borderRadius="md"
+                  zIndex={1}
                 >
                   {Math.round(discountRate)}%
                 </Box>

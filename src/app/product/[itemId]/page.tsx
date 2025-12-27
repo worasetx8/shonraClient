@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUp, Star, ShoppingCart, Home, Search, X, Store } from "lucide-react";
 import CategorySlider from "@/components/CategorySlider";
 import StructuredData from "@/components/StructuredData";
@@ -480,20 +481,24 @@ export default function ProductDetailPage() {
       <StructuredData
         type="Product"
         data={{
+          productName: product.product_name,
           name: product.product_name,
+          imageUrl: product.image_url,
           image: product.image_url,
-          description: `${product.product_name} จาก ${product.shop_name}`,
-          brand: product.shop_name,
-          offers: {
-            price: product.price,
-            priceCurrency: "THB",
-            availability: "https://schema.org/InStock",
-            url: product.offer_link,
-          },
-          aggregateRating:
-            product.rating_star > 0
-              ? { ratingValue: product.rating_star, reviewCount: product.sales_count }
-              : undefined,
+          description: `${product.product_name} จาก ${product.shop_name} - สินค้าคุณภาพดี ราคาพิเศษ พร้อมส่วนลดและคอมมิชชั่น`,
+          shopName: product.shop_name,
+          offerLink: product.offer_link,
+          url: product.offer_link,
+          price: product.price,
+          priceMin: product.price_min || product.price,
+          ratingStar: product.rating_star,
+          ratingCount: product.sales_count,
+          reviewCount: product.sales_count,
+          salesCount: product.sales_count,
+          offerDescription: `${product.product_name} จาก ${product.shop_name} - ส่งฟรีทั่วไทย`,
+          priceValidUntil: product.period_end_time 
+            ? new Date(product.period_end_time * 1000).toISOString().split('T')[0]
+            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         }}
       />
       
@@ -581,14 +586,19 @@ export default function ProductDetailPage() {
             <div className="lg:col-span-8 bg-white p-0 lg:p-6 rounded-none lg:rounded-xl shadow-md lg:overflow-y-auto">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-6">
                 <div className="flex items-start justify-center bg-gray-50 lg:bg-transparent relative">
-                  <img
+                  <Image
                     src={product.image_url}
                     alt={product.product_name}
+                    width={500}
+                    height={500}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     className="w-full h-auto lg:max-h-[500px] object-contain"
+                    loading="eager"
+                    priority
                   />
                   {/* Discount Badge - Top Right */}
                   {product.discount_rate > 0 && (
-                    <div className="absolute top-2 right-2 bg-orange-400 text-white text-xs lg:text-sm font-bold px-2 py-1 rounded-md shadow-lg">
+                    <div className="absolute top-2 right-2 bg-orange-400 text-white text-xs lg:text-sm font-bold px-2 py-1 rounded-md shadow-lg z-10">
                       {Math.round(product.discount_rate)}%
                     </div>
                   )}
@@ -657,11 +667,16 @@ export default function ProductDetailPage() {
                       href={`/product/${p.item_id}`}
                       className="flex-shrink-0 w-32 bg-gray-50 rounded-lg p-2 hover:bg-gray-100 transition-colors"
                     >
-                      <img
-                        src={p.image_url}
-                        className="w-full h-24 object-cover rounded mb-2"
-                        alt={p.product_name}
-                      />
+                      <div className="relative w-full h-24 rounded mb-2 overflow-hidden">
+                        <Image
+                          src={p.image_url}
+                          className="object-cover"
+                          fill
+                          sizes="128px"
+                          alt={p.product_name}
+                          loading="lazy"
+                        />
+                      </div>
                       <div className="text-xs text-gray-700 line-clamp-2 mb-1">
                         {p.product_name}
                       </div>
@@ -678,11 +693,16 @@ export default function ProductDetailPage() {
                       href={`/product/${p.item_id}`}
                       className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors"
                     >
-                      <img
-                        src={p.image_url}
-                        className="w-12 h-12 object-cover rounded flex-shrink-0"
-                        alt={p.product_name}
-                      />
+                      <div className="relative w-12 h-12 rounded flex-shrink-0 overflow-hidden">
+                        <Image
+                          src={p.image_url}
+                          className="object-cover"
+                          fill
+                          sizes="48px"
+                          alt={p.product_name}
+                          loading="lazy"
+                        />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="text-xs text-gray-700 line-clamp-2">{p.product_name}</div>
                         <div className="text-xs font-semibold text-red-600 mt-1">

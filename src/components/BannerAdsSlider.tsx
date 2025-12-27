@@ -114,11 +114,13 @@ export default function BannerAdsSlider({ autoPlayInterval = 5000, positionName 
               onClick={() => handleBannerClick(banner)}
             >
               {/* Use regular img tag for all banner images (works with both relative and absolute URLs) */}
+              {/* First image (index 0) is LCP element - use fetchpriority="high" for faster loading */}
               <img
                 src={banner.image_url}
                 alt={banner.alt_text || 'Banner'}
                 className="absolute inset-0 w-full h-full object-cover"
                 loading={index === 0 ? 'eager' : 'lazy'}
+                fetchPriority={index === 0 ? 'high' : 'auto'}
                 onError={(e) => {
                   // Handle image loading errors gracefully
                   console.error('Failed to load banner image:', banner.image_url);

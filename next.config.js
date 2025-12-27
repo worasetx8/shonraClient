@@ -7,19 +7,39 @@ const nextConfig = {
     ignoreBuildErrors: true // Temporarily ignore TS errors to get the dev server running
   },
   images: {
-    domains: ["cf.shopee.co.th", "shopee.co.th", "down-th.img.susercontent.com", "cf.shopee.sg", "shopee.sg", "localhost"],
+    // domains is deprecated, use remotePatterns instead
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cf.shopee.co.th"
+      },
+      {
+        protocol: "https",
+        hostname: "shopee.co.th"
+      },
       {
         protocol: "https",
         hostname: "**.shopee.co.th"
       },
       {
         protocol: "https",
-        hostname: "**.shopee.sg"
+        hostname: "down-th.img.susercontent.com"
       },
       {
         protocol: "https",
         hostname: "**.susercontent.com"
+      },
+      {
+        protocol: "https",
+        hostname: "cf.shopee.sg"
+      },
+      {
+        protocol: "https",
+        hostname: "shopee.sg"
+      },
+      {
+        protocol: "https",
+        hostname: "**.shopee.sg"
       },
       {
         protocol: "http",
@@ -34,12 +54,148 @@ const nextConfig = {
         pathname: "/api/uploads/**"
       }
     ],
+    // Image optimization settings
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
     // Allow unoptimized images for local development
     unoptimized: process.env.NODE_ENV === "development" ? false : false
   },
   // Enable aggressive caching for static assets
   async headers() {
     return [
+      // Static assets with content hashes (immutable - never changes, can cache forever)
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Images - cache for 1 month with stale-while-revalidate
+      // Next.js route patterns don't support regex non-capturing groups, so we use individual patterns
+      {
+        source: '/:path*\\.jpg',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.jpeg',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.gif',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.png',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.webp',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.svg',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.ico',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.avif',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      // Fonts - cache forever (immutable)
+      {
+        source: '/:path*\\.woff',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.woff2',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.ttf',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.otf',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*\\.eot',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // API routes - existing cache configuration
       {
         source: '/api/categories',
         headers: [

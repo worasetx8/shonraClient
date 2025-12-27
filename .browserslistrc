@@ -1,0 +1,15 @@
+# Browsers that we support
+# This configuration targets modern browsers to reduce bundle size by avoiding unnecessary polyfills
+
+> 0.5%
+last 2 versions
+not dead
+not IE 11
+
+# Focus on modern browsers (2020+)
+# This allows us to use modern JavaScript features without polyfills like:
+# - Array.prototype.at
+# - Array.prototype.flat
+# - Object.fromEntries
+# - etc.
+
