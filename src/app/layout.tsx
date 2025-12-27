@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 const cardo = Cardo({
-  weight: ['400', '700'],
+  weight: ['700'], // Load only Bold for Logo
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-cardo',

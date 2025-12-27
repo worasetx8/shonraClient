@@ -37,5 +37,14 @@
     "postcss": "^8.5.6",
     "rimraf": "^6.1.0",
     "typescript": "^5.2.2"
-  }
+  },
+  "browserslist": [
+    "chrome >= 87",
+    "firefox >= 78",
+    "edge >= 88",
+    "safari >= 14",
+    "ios_saf >= 14",
+    "opera >= 80",
+    "not IE 11"
+  ]
 }
