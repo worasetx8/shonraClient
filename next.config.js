@@ -6,6 +6,70 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true // Temporarily ignore TS errors to get the dev server running
   },
+  // Enable compression for better performance
+  compress: true,
+  // Optimize production builds
+  swcMinify: true,
+  // Webpack optimizations
+  webpack: (config, { dev, isServer }) => {
+    // Production optimizations
+    if (!dev && !isServer) {
+      // Enable tree shaking
+      config.optimization = {
+        ...config.optimization,
+        usedExports: true,
+        sideEffects: false,
+      };
+      
+      // Split chunks for better caching
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          // Vendor chunk for node_modules
+          vendor: {
+            name: 'vendor',
+            chunks: 'all',
+            test: /node_modules/,
+            priority: 20,
+          },
+          // Common chunk for shared code
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            priority: 10,
+            reuseExistingChunk: true,
+            enforce: true,
+          },
+          // Chakra UI chunk (large library)
+          chakra: {
+            name: 'chakra',
+            test: /[\\/]node_modules[\\/]@chakra-ui[\\/]/,
+            chunks: 'all',
+            priority: 30,
+          },
+          // Framer Motion chunk
+          framer: {
+            name: 'framer',
+            test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
+            chunks: 'all',
+            priority: 30,
+          },
+          // Lucide icons chunk
+          lucide: {
+            name: 'lucide',
+            test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+            chunks: 'all',
+            priority: 30,
+          },
+        },
+      };
+    }
+    
+    return config;
+  },
   images: {
     // domains is deprecated, use remotePatterns instead
     remotePatterns: [

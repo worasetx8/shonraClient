@@ -10,13 +10,23 @@ import {
 } from 'lucide-react';
 import { useToast } from '@chakra-ui/react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import ModernProductCard from '@/components/ModernProductCard';
-import BannerAdsSlider from '@/components/BannerAdsSlider';
 import CategorySlider from '@/components/CategorySlider';
-import IconBannerList from '@/components/IconBannerList';
 import StructuredData from '@/components/StructuredData';
 import { generateMetaDescription } from '@/lib/aiSeoService';
 import * as ClientAPI from '@/lib/client-api';
+
+// Lazy load heavy components that are not immediately visible
+const BannerAdsSlider = dynamic(() => import('@/components/BannerAdsSlider'), {
+  ssr: true, // Still render on server for SEO
+  loading: () => <div className="w-full h-32 bg-gray-100 animate-pulse rounded-lg" />
+});
+
+const IconBannerList = dynamic(() => import('@/components/IconBannerList'), {
+  ssr: true,
+  loading: () => <div className="w-full h-20 bg-gray-100 animate-pulse rounded-lg" />
+});
 
 interface Product {
   productName: string;
