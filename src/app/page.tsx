@@ -1160,17 +1160,19 @@ export default function NewHomePage() {
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'ItemList',
+              name: 'Recommended Products',
               numberOfItems: displayProducts.length,
               itemListElement: displayProducts.slice(0, 20).map((product, index) => ({
                 '@type': 'ListItem',
                 position: index + 1,
+                url: `${typeof window !== 'undefined' ? window.location.origin : 'https://www.shonra.com'}/product/${product.itemId}`,
                 item: {
                   '@type': 'Product',
                   '@id': `${typeof window !== 'undefined' ? window.location.origin : 'https://www.shonra.com'}/product/${product.itemId}`,
                   name: product.productName,
                   description: `${product.productName} - ${product.shopName || 'Shopee'}`,
                   image: product.imageUrl,
-                  url: `/product/${product.itemId}`,
+                  url: `${typeof window !== 'undefined' ? window.location.origin : 'https://www.shonra.com'}/product/${product.itemId}`,
                   ...(product.shopName && {
                     brand: {
                       '@type': 'Brand',
@@ -1264,8 +1266,10 @@ export default function NewHomePage() {
               itemListElement: flashSaleProducts.slice(0, 10).map((product, index) => ({
                 '@type': 'ListItem',
                 position: index + 1,
+                url: product.offerLink,
                 item: {
                   '@type': 'Product',
+                  url: product.offerLink,
                   name: product.productName,
                   image: product.imageUrl,
                   offers: {
@@ -1828,6 +1832,7 @@ export default function NewHomePage() {
                   width={320}
                   height={180}
                   loading="eager"
+                  fetchPriority="high"
                   draggable="false"
                   onError={(e) => {
                     // Handle image loading errors gracefully
@@ -1850,6 +1855,7 @@ export default function NewHomePage() {
                 width={320}
                 height={180}
                 loading="eager"
+                fetchPriority="high"
                 onError={(e) => {
                   const target = e.currentTarget;
                   target.style.display = 'none';
@@ -2030,6 +2036,7 @@ export default function NewHomePage() {
                       width={640}
                       height={360}
                       loading="eager"
+                      fetchPriority="high"
                       draggable="false"
                       onError={(e) => {
                         // Handle image loading errors gracefully
@@ -2053,6 +2060,7 @@ export default function NewHomePage() {
                     width={640}
                     height={360}
                     loading="eager"
+                    fetchPriority="high"
                     onError={(e) => {
                       // Handle image loading errors gracefully
                       console.error('Failed to load flash sale banner image:', flashSaleBanner.image_url);
