@@ -30,13 +30,20 @@ export function getBackendUrl(): string {
 
 /**
  * Create default headers for backend requests with User-Agent
- * @returns Headers object with User-Agent and Content-Type
+ * Includes optional secret header for production security
+ * @returns Headers object with User-Agent, Content-Type, and optional secret header
  */
 export function createDefaultHeaders(additionalHeaders?: HeadersInit): HeadersInit {
   const defaultHeaders: HeadersInit = {
     "Content-Type": "application/json",
     "User-Agent": "SHONRA-Frontend/1.0"
   };
+
+  // Add secret header in production if configured (for additional security)
+  // This header is only sent from Next.js server-side (not exposed to client)
+  if (typeof window === "undefined" && process.env.NEXTJS_API_SECRET) {
+    (defaultHeaders as Record<string, string>)["X-NextJS-API-Secret"] = process.env.NEXTJS_API_SECRET;
+  }
 
   if (additionalHeaders) {
     return { ...defaultHeaders, ...additionalHeaders };

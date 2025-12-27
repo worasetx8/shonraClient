@@ -60,6 +60,7 @@ export async function fetchTags() {
 
 /**
  * Fetch products from backend
+ * Use Next.js API route to avoid IP blocking and CORS issues
  */
 export async function fetchProducts(params: {
   page?: string;
@@ -69,7 +70,20 @@ export async function fetchProducts(params: {
   search?: string;
   status?: string;
 }) {
-  return fetchFromBackend("/api/products/public", { params });
+  // Use Next.js API route instead of calling backend directly
+  const searchParams = new URLSearchParams();
+  if (params.page) searchParams.set('page', params.page);
+  if (params.limit) searchParams.set('limit', params.limit);
+  if (params.category_id) searchParams.set('category_id', params.category_id);
+  if (params.tag_id) searchParams.set('tag_id', params.tag_id);
+  if (params.search) searchParams.set('search', params.search);
+  if (params.status) searchParams.set('status', params.status);
+
+  const response = await fetch(`/api/products/public?${searchParams.toString()}`);
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status}`);
+  }
+  return response.json();
 }
 
 /**

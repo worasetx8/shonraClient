@@ -10,6 +10,9 @@ const nextConfig = {
   compress: true,
   // Optimize production builds
   swcMinify: true,
+  // Enable source maps for production (helps with debugging and Lighthouse insights)
+  // Source maps are only loaded when DevTools are open, so they don't affect performance
+  productionBrowserSourceMaps: true,
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
     // Production optimizations

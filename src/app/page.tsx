@@ -1431,7 +1431,7 @@ export default function NewHomePage() {
           {/* {tags.length > 0 && (
             <div className="flex-1 flex flex-col min-h-0">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">Tags</h3>
+                <div className="text-sm font-bold text-gray-500 uppercase tracking-wider">Tags</div>
                 {activeTags.length > 0 && (
                   <button
                     onClick={() => {
@@ -1701,7 +1701,7 @@ export default function NewHomePage() {
                         <div className="p-6 bg-white rounded-full mb-4">
                           <Sparkles size={48} className="text-gray-300" />
                         </div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-2">No products found</h3>
+                        <h2 className="text-lg font-bold text-gray-900 mb-2">No products found</h2>
                         <p className="text-gray-500 mb-4">Try adjusting your search or filters.</p>
                         <button
                           onClick={() => {
@@ -1765,7 +1765,7 @@ export default function NewHomePage() {
                       <div className="p-6 bg-white rounded-full mb-4">
                         <Sparkles size={48} className="text-gray-300" />
                       </div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-2">No products found</h3>
+                      <h2 className="text-lg font-bold text-gray-900 mb-2">No products found</h2>
                       <p className="text-gray-500 mb-4">Try adjusting your search or filters.</p>
                       <button
                         onClick={() => {
@@ -1913,12 +1913,12 @@ export default function NewHomePage() {
                   )}
                 </div>
                 <div className="p-2">
-                  <h4 className="text-xs font-medium text-gray-900 mb-1 overflow-hidden" style={{ 
+                  <div className="text-xs font-medium text-gray-900 mb-1 overflow-hidden" style={{ 
                     height: '2.5rem',
                     lineHeight: '1.25rem'
                   }}>
                     {product.productName}
-                  </h4>
+                  </div>
                   <div className="flex items-baseline gap-1 mb-1">
                     <span className="text-red-600 font-bold text-sm">
                       ฿{product.price?.toLocaleString()}
@@ -2116,12 +2116,12 @@ export default function NewHomePage() {
                         )}
                       </div>
                       <div className="p-2">
-                        <h4 className="text-xs font-medium text-gray-900 mb-1 overflow-hidden" style={{ 
+                        <div className="text-xs font-medium text-gray-900 mb-1 overflow-hidden" style={{ 
                           height: '2.5rem',
                           lineHeight: '1.25rem'
                         }}>
                           {product.productName}
-                        </h4>
+                        </div>
                         <div className="flex items-baseline gap-1 mb-1">
                           <span className="text-red-600 font-bold text-sm">
                             ฿{product.price?.toLocaleString()}

@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
     const categoryId = searchParams.get("category_id") || "all";
     const tagId = searchParams.get("tag_id") || "all";
     const search = searchParams.get("search") || "";
+    const status = searchParams.get("status") || "";
 
     const params: Record<string, string> = {
       page,
@@ -22,6 +23,10 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       params.search = search;
+    }
+
+    if (status) {
+      params.status = status;
     }
 
     const BACKEND_URL = getBackendUrl();
