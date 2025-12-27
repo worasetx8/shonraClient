@@ -323,7 +323,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 ฿{currentPrice.toLocaleString()}
               </Text>
               {hasDiscount && (
-                <Text fontSize="xs" color="gray.500" textDecoration="line-through">
+                <Text fontSize="xs" color="gray.600" textDecoration="line-through">
                   ฿{originalPrice.toLocaleString()}
                 </Text>
               )}
@@ -340,7 +340,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   />
                 ))}
                 {product.salesCount && product.salesCount > 0 && (
-                  <Text fontSize="xs" color="gray.600" ml={1}>
+                  <Text fontSize="xs" color="gray.700" ml={1}>
                     {product.salesCount.toLocaleString()}
                   </Text>
                 )}
@@ -445,7 +445,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 ฿{currentPrice.toLocaleString()}
               </Text>
               {hasDiscount && (
-                <Text fontSize="xs" color="gray.500" textDecoration="line-through">
+                <Text fontSize="xs" color="gray.600" textDecoration="line-through">
                   ฿{originalPrice.toLocaleString()}
                 </Text>
               )}
@@ -462,7 +462,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   />
                 ))}
                 {product.salesCount && product.salesCount > 0 && (
-                  <Text fontSize="xs" color="gray.600" ml={1}>
+                  <Text fontSize="xs" color="gray.700" ml={1}>
                     {product.salesCount.toLocaleString()}
                   </Text>
                 )}

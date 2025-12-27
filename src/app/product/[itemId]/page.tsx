@@ -616,7 +616,7 @@ export default function ProductDetailPage() {
                         </span>
                       </div>
                     )}
-                    <div className="text-gray-600 text-xs lg:text-sm">
+                    <div className="text-gray-700 text-xs lg:text-sm">
                       ขายแล้ว {formatNumber(product.sales_count)}
                     </div>
                   </div>
@@ -626,7 +626,7 @@ export default function ProductDetailPage() {
                       {formatPrice(product.price)}
                     </div>
                     {originalPrice && (
-                      <div className="text-xs lg:text-sm text-gray-500 line-through">
+                      <div className="text-xs lg:text-sm text-gray-600 line-through">
                         {formatPrice(originalPrice)}
                       </div>
                     )}

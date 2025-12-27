@@ -13,6 +13,13 @@ const nextConfig = {
   // Enable source maps for production (helps with debugging and Lighthouse insights)
   // Source maps are only loaded when DevTools are open, so they don't affect performance
   productionBrowserSourceMaps: true,
+  // Modularize imports for better tree-shaking
+  modularizeImports: {
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{member}}',
+      skipDefaultConversion: true,
+    },
+  },
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
     // Production optimizations
@@ -30,11 +37,11 @@ const nextConfig = {
         cacheGroups: {
           default: false,
           vendors: false,
-          // Vendor chunk for node_modules
+          // Vendor chunk for node_modules (excluding framework and large libs handled separately)
           vendor: {
             name: 'vendor',
             chunks: 'all',
-            test: /node_modules/,
+            test: /[\\/]node_modules[\\/](?!(@chakra-ui|framer-motion|lucide-react|next|react|react-dom|scheduler))[\\/]/,
             priority: 20,
           },
           // Common chunk for shared code
@@ -44,6 +51,14 @@ const nextConfig = {
             chunks: 'all',
             priority: 10,
             reuseExistingChunk: true,
+            enforce: true,
+          },
+          // React and Framework chunk
+          framework: {
+            name: 'framework',
+            test: /[\\/]node_modules[\\/](next|react|react-dom|scheduler)[\\/]/,
+            chunks: 'all',
+            priority: 40,
             enforce: true,
           },
           // Chakra UI chunk (large library)
