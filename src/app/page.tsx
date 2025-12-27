@@ -18,13 +18,14 @@ import { generateMetaDescription } from '@/lib/aiSeoService';
 import * as ClientAPI from '@/lib/client-api';
 
 // Lazy load heavy components that are not immediately visible
+// Disable SSR for components that fetch data client-side to prevent hydration mismatch
 const BannerAdsSlider = dynamic(() => import('@/components/BannerAdsSlider'), {
-  ssr: true, // Still render on server for SEO
+  ssr: false, // Disable SSR because component fetches data in useEffect
   loading: () => <div className="w-full h-32 bg-gray-100 animate-pulse rounded-lg" />
 });
 
 const IconBannerList = dynamic(() => import('@/components/IconBannerList'), {
-  ssr: true,
+  ssr: false, // Disable SSR because component fetches data in useEffect
   loading: () => <div className="w-full h-20 bg-gray-100 animate-pulse rounded-lg" />
 });
 
@@ -234,42 +235,8 @@ export default function NewHomePage() {
     return () => clearInterval(interval);
   }, [isPopupBannerOpen, popupBanners.length]);
 
-  // Update document metadata dynamically for SEO
-  useEffect(() => {
-    const pageTitle = `${websiteName} - ช็อปสินค้าออนไลน์ Shopee Affiliate ราคาดี ส่วนลดสูง`;
-    const pageDescription = `ช็อปสินค้าคุณภาพดี ราคาถูก จาก Shopee ที่ ${websiteName} | สินค้าหลากหลายหมวดหมู่ โปรโมชั่นดีทุกวัน`;
-    
-    document.title = pageTitle;
-    
-    // Update or create meta tags
-    const updateMetaTag = (name: string, content: string, property?: boolean) => {
-      const attr = property ? 'property' : 'name';
-      let meta = document.querySelector(`meta[${attr}="${name}"]`);
-      if (!meta) {
-        meta = document.createElement('meta');
-        meta.setAttribute(attr, name);
-        document.head.appendChild(meta);
-      }
-      meta.setAttribute('content', content);
-    };
-
-    updateMetaTag('description', pageDescription);
-    updateMetaTag('keywords', `shopee, affiliate, ส่วนลด, ช็อปออนไลน์, ${websiteName}, โปรโมชั่น`);
-    updateMetaTag('og:title', pageTitle, true);
-    updateMetaTag('og:description', pageDescription, true);
-    updateMetaTag('og:url', typeof window !== 'undefined' ? window.location.href : 'https://www.shonra.com', true);
-    updateMetaTag('og:type', 'website', true);
-    updateMetaTag('og:locale', 'th_TH', true);
-    updateMetaTag('og:site_name', websiteName, true);
-    updateMetaTag('twitter:card', 'summary_large_image', true);
-    updateMetaTag('twitter:title', pageTitle, true);
-    updateMetaTag('twitter:description', pageDescription, true);
-    
-    if (displayProducts.length > 0 && displayProducts[0].imageUrl) {
-      updateMetaTag('og:image', displayProducts[0].imageUrl, true);
-      updateMetaTag('twitter:image', displayProducts[0].imageUrl, true);
-    }
-  }, [websiteName, displayProducts]);
+  // Note: Meta tags are handled by generateMetadata in layout.tsx
+  // Removing client-side meta tag updates to prevent hydration mismatch
 
   // Handle popup close
   const handleClosePopup = useCallback(() => {
