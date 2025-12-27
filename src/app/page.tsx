@@ -1165,7 +1165,6 @@ export default function NewHomePage() {
               itemListElement: displayProducts.slice(0, 20).map((product, index) => ({
                 '@type': 'ListItem',
                 position: index + 1,
-                url: `${typeof window !== 'undefined' ? window.location.origin : 'https://www.shonra.com'}/product/${product.itemId}`,
                 item: {
                   '@type': 'Product',
                   '@id': `${typeof window !== 'undefined' ? window.location.origin : 'https://www.shonra.com'}/product/${product.itemId}`,
@@ -1266,7 +1265,6 @@ export default function NewHomePage() {
               itemListElement: flashSaleProducts.slice(0, 10).map((product, index) => ({
                 '@type': 'ListItem',
                 position: index + 1,
-                url: product.offerLink,
                 item: {
                   '@type': 'Product',
                   url: product.offerLink,

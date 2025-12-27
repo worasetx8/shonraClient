@@ -431,7 +431,6 @@ export default function CategoryPage() {
               itemListElement: filteredProducts.slice(0, 20).map((product, index) => ({
                 '@type': 'ListItem',
                 position: index + 1,
-                url: `${siteUrl}/product/${product.item_id}`,
                 item: {
                   '@type': 'Product',
                   '@id': `${canonicalUrl}#product-${product.item_id}`,

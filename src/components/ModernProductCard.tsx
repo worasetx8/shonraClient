@@ -266,14 +266,13 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
               width={400}
               height={400}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover'
-              }}
-              loading="lazy"
-              unoptimized={isShopeeImage}
-            />
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
+                    loading="lazy"
+                  />
             
             {/* Discount Badge - Top Right */}
             {hasDiscount && discountRate > 0 && (
