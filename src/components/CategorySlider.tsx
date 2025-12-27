@@ -25,19 +25,24 @@ export default function CategorySlider({
 }: CategorySliderProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const activeCategoryRef = useRef<HTMLButtonElement>(null);
+  const tickingRef = useRef(false); // Add ticking ref for throttling
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
 
   // Use requestAnimationFrame to batch DOM reads and avoid forced reflow
   const checkScrollButtons = () => {
-    requestAnimationFrame(() => {
-      if (scrollContainerRef.current) {
-        // Batch all DOM reads together
-        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-        setShowLeftArrow(scrollLeft > 0);
-        setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
-      }
-    });
+    if (!tickingRef.current) {
+      requestAnimationFrame(() => {
+        if (scrollContainerRef.current) {
+          // Batch all DOM reads together
+          const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+          setShowLeftArrow(scrollLeft > 0);
+          setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1);
+        }
+        tickingRef.current = false;
+      });
+      tickingRef.current = true;
+    }
   };
 
   // Auto-scroll active category to center

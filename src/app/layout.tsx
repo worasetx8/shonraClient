@@ -176,6 +176,12 @@ export default function RootLayout({
         {/* Preconnect to important origins */}
         <link rel="preconnect" href="https://api.shonra.com" />
         <link rel="preconnect" href="https://cf.shopee.co.th" />
+        <link rel="preconnect" href="https://down-th.img.susercontent.com" />
+        
+        {/* DNS Prefetch as fallback/addition */}
+        <link rel="dns-prefetch" href="https://api.shonra.com" />
+        <link rel="dns-prefetch" href="https://cf.shopee.co.th" />
+        <link rel="dns-prefetch" href="https://down-th.img.susercontent.com" />
       </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>

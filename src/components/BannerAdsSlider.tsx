@@ -14,16 +14,26 @@ interface Banner {
 interface BannerAdsSliderProps {
   autoPlayInterval?: number;
   positionName?: string;
+  initialBanners?: Banner[];
 }
 
-export default function BannerAdsSlider({ autoPlayInterval = 5000, positionName = 'Banner Ads' }: BannerAdsSliderProps) {
-  const [banners, setBanners] = useState<Banner[]>([]);
+export default function BannerAdsSlider({ 
+  autoPlayInterval = 5000, 
+  positionName = 'Banner Ads',
+  initialBanners = []
+}: BannerAdsSliderProps) {
+  const [banners, setBanners] = useState<Banner[]>(initialBanners);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(initialBanners.length === 0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Fetch banners
+  // Fetch banners only if no initial banners provided
   useEffect(() => {
+    if (initialBanners.length > 0) {
+      setIsLoading(false);
+      return;
+    }
+
     const fetchBanners = async () => {
       try {
         const encodedPosition = encodeURIComponent(positionName);
@@ -41,7 +51,7 @@ export default function BannerAdsSlider({ autoPlayInterval = 5000, positionName 
     };
 
     fetchBanners();
-  }, [positionName]);
+  }, [positionName, initialBanners.length]);
 
   // Auto-play functionality
   useEffect(() => {

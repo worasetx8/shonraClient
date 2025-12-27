@@ -1,15 +1,7 @@
-# Target modern browsers to avoid ES2022 polyfills (e.g. Array.prototype.at, Object.hasOwn)
-# This saves ~13KB in vendor bundle by dropping support for:
-# - iOS Safari < 15.4 (released March 2022)
-# - Chrome < 93 (released August 2021)
-# - Firefox < 90 (released July 2021)
-
-Chrome >= 93
-Edge >= 93
-Firefox >= 90
-Safari >= 15.4
-iOS >= 15.4
-Samsung >= 16
-Opera >= 79
-not dead
-not op_mini all
+chrome >= 87
+firefox >= 78
+edge >= 88
+safari >= 14
+ios_saf >= 14
+opera >= 80
+not IE 11

@@ -13,17 +13,12 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import ModernProductCard from '@/components/ModernProductCard';
 import CategorySlider from '@/components/CategorySlider';
+import BannerAdsSlider from '@/components/BannerAdsSlider'; // Import directly for LCP optimization
 import StructuredData from '@/components/StructuredData';
 import { generateMetaDescription } from '@/lib/aiSeoService';
 import * as ClientAPI from '@/lib/client-api';
 
 // Lazy load heavy components that are not immediately visible
-// Disable SSR for components that fetch data client-side to prevent hydration mismatch
-const BannerAdsSlider = dynamic(() => import('@/components/BannerAdsSlider'), {
-  ssr: false, // Disable SSR because component fetches data in useEffect
-  loading: () => <div className="w-full h-32 bg-gray-100 animate-pulse rounded-lg" />
-});
-
 const IconBannerList = dynamic(() => import('@/components/IconBannerList'), {
   ssr: false, // Disable SSR because component fetches data in useEffect
   loading: () => <div className="w-full h-20 bg-gray-100 animate-pulse rounded-lg" />
