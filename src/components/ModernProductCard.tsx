@@ -39,9 +39,10 @@ interface ProductCardProps {
     periodEndTime?: number;
     campaignActive?: boolean;
   };
+  priority?: boolean;
 }
 
-const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ModernProductCard: React.FC<ProductCardProps> = ({ product, priority = false }) => {
   const [mounted, setMounted] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
@@ -271,7 +272,8 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                       height: '100%',
                       objectFit: 'cover'
                     }}
-                    loading="lazy"
+                    loading={priority ? "eager" : "lazy"}
+                    priority={priority}
                   />
             
             {/* Discount Badge - Top Right */}
@@ -391,7 +393,8 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   height: '100%',
                   objectFit: 'cover'
                 }}
-                loading="lazy"
+                loading={priority ? "eager" : "lazy"}
+                priority={priority}
               />
               
               {/* Discount Badge - Top Right */}
@@ -520,6 +523,7 @@ export default memo(ModernProductCard, (prevProps, nextProps) => {
     prevProps.product.priceDiscountRate === nextProps.product.priceDiscountRate &&
     prevProps.product.commission === nextProps.product.commission &&
     prevProps.product.shopType === nextProps.product.shopType &&
-    prevProps.product.fromShopee === nextProps.product.fromShopee
+    prevProps.product.fromShopee === nextProps.product.fromShopee &&
+    prevProps.priority === nextProps.priority
   );
 });

@@ -1688,8 +1688,8 @@ export default function NewHomePage() {
                     if (shopeeSearchResults.length > 0) {
                       return (
                         <div className="grid grid-cols-2 gap-2 pb-16 lg:pb-4 lg:grid-cols-[repeat(auto-fill,minmax(210px,1fr))]">
-                          {shopeeSearchResults.map((product) => (
-                            <ModernProductCard key={product.itemId} product={product} />
+                          {shopeeSearchResults.map((product, index) => (
+                            <ModernProductCard key={product.itemId} product={product} priority={index < 4} />
                           ))}
                         </div>
                       );
@@ -1699,8 +1699,8 @@ export default function NewHomePage() {
                     if (searchResults.length > 0) {
                       return (
                         <div className="grid grid-cols-2 gap-2 pb-16 lg:pb-4 lg:grid-cols-[repeat(auto-fill,minmax(210px,1fr))]">
-                          {searchResults.map((product) => (
-                            <ModernProductCard key={product.itemId} product={product} />
+                          {searchResults.map((product, index) => (
+                            <ModernProductCard key={product.itemId} product={product} priority={index < 4} />
                           ))}
                         </div>
                       );
@@ -1735,8 +1735,8 @@ export default function NewHomePage() {
                     return (
                       <>
                         <div className="grid grid-cols-2 gap-2 pb-16 lg:pb-4 lg:grid-cols-[repeat(auto-fill,minmax(210px,1fr))]">
-                          {visibleProducts.map((product) => (
-                            <ModernProductCard key={product.itemId} product={product} />
+                          {visibleProducts.map((product, index) => (
+                            <ModernProductCard key={product.itemId} product={product} priority={index < 6} />
                           ))}
                         </div>
                         {canLoadMore && (
