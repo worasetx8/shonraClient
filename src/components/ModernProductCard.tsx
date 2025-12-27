@@ -228,6 +228,10 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
     );
   }
 
+  // Check if image is from Shopee to bypass optimization
+  // Check both explicit flag and URL pattern
+  const isShopeeImage = product.fromShopee || product.imageUrl.includes('shopee') || product.imageUrl.includes('susercontent');
+
   return (
     <Box
       bg="white"
@@ -268,6 +272,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 objectFit: 'cover'
               }}
               loading="lazy"
+              unoptimized={isShopeeImage}
             />
             
             {/* Discount Badge - Top Right */}
