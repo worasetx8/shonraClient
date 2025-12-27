@@ -1,15 +1,15 @@
-# Browsers that we support
-# This configuration targets modern browsers to reduce bundle size by avoiding unnecessary polyfills
+# Target modern browsers to avoid ES2022 polyfills (e.g. Array.prototype.at, Object.hasOwn)
+# This saves ~13KB in vendor bundle by dropping support for:
+# - iOS Safari < 15.4 (released March 2022)
+# - Chrome < 93 (released August 2021)
+# - Firefox < 90 (released July 2021)
 
-> 0.5%
-last 2 versions
+Chrome >= 93
+Edge >= 93
+Firefox >= 90
+Safari >= 15.4
+iOS >= 15.4
+Samsung >= 16
+Opera >= 79
 not dead
-not IE 11
-
-# Focus on modern browsers (2020+)
-# This allows us to use modern JavaScript features without polyfills like:
-# - Array.prototype.at
-# - Array.prototype.flat
-# - Object.fromEntries
-# - etc.
-
+not op_mini all

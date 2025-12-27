@@ -276,7 +276,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 position="absolute"
                 top={2}
                 right={2}
-                bg="orange.400"
+                bg="red.600"
                 color="white"
                 fontSize={{ base: 'xs', md: 'sm' }}
                 fontWeight="bold"
@@ -284,6 +284,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 py={1}
                 borderRadius="md"
                 zIndex={1}
+                boxShadow="sm"
               >
                 {Math.round(discountRate)}%
               </Box>
@@ -318,11 +319,11 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
              {/* Price Section  */}
 
             <HStack spacing={2} align="baseline" justify="space-between">
-              <Text color="red.500" fontWeight="bold" fontSize={{ base: 'lg', md: 'xl' }}>
+              <Text color="red.600" fontWeight="bold" fontSize={{ base: 'lg', md: 'xl' }}>
                 ฿{currentPrice.toLocaleString()}
               </Text>
               {hasDiscount && (
-                <Text fontSize="xs" color="gray.400" textDecoration="line-through">
+                <Text fontSize="xs" color="gray.500" textDecoration="line-through">
                   ฿{originalPrice.toLocaleString()}
                 </Text>
               )}
@@ -339,7 +340,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   />
                 ))}
                 {product.salesCount && product.salesCount > 0 && (
-                  <Text fontSize="xs" color="gray.500" ml={1}>
+                  <Text fontSize="xs" color="gray.600" ml={1}>
                     {product.salesCount.toLocaleString()}
                   </Text>
                 )}
@@ -395,7 +396,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   position="absolute"
                   top={2}
                   right={2}
-                  bg="orange.400"
+                  bg="red.600"
                   color="white"
                   fontSize={{ base: 'xs', md: 'sm' }}
                   fontWeight="bold"
@@ -403,6 +404,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   py={1}
                   borderRadius="md"
                   zIndex={1}
+                  boxShadow="sm"
                 >
                   {Math.round(discountRate)}%
                 </Box>
@@ -439,11 +441,11 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <VStack align="stretch" px={{ base: 3, md: 4 }} pb={{ base: 3, md: 4 }} pt={2} spacing={2} flex={1}>
             {/* Price Section */}
             <HStack spacing={2} align="baseline" justify="space-between">
-              <Text color="red.500" fontWeight="bold" fontSize={{ base: 'lg', md: 'xl' }}>
+              <Text color="red.600" fontWeight="bold" fontSize={{ base: 'lg', md: 'xl' }}>
                 ฿{currentPrice.toLocaleString()}
               </Text>
               {hasDiscount && (
-                <Text fontSize="xs" color="gray.400" textDecoration="line-through">
+                <Text fontSize="xs" color="gray.500" textDecoration="line-through">
                   ฿{originalPrice.toLocaleString()}
                 </Text>
               )}
@@ -460,7 +462,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   />
                 ))}
                 {product.salesCount && product.salesCount > 0 && (
-                  <Text fontSize="xs" color="gray.500" ml={1}>
+                  <Text fontSize="xs" color="gray.600" ml={1}>
                     {product.salesCount.toLocaleString()}
                   </Text>
                 )}

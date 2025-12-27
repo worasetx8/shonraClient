@@ -1,7 +1,21 @@
 import { Providers } from './providers';
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
+import { Inter, Cardo } from 'next/font/google';
 import { getBackendUrl } from '@/lib/api-utils';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const cardo = Cardo({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-cardo',
+});
 
 const DEFAULT_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://shonra.com';
 const DEFAULT_SITE_NAME = 'SHONRA';
@@ -157,18 +171,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="th">
+    <html lang="th" className={`${inter.variable} ${cardo.variable}`}>
       <head>
-        {/* Preconnect to Google Fonts for faster font loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Load fonts asynchronously to prevent blocking render */}
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cardo:wght@400;700&display=swap" 
-          rel="stylesheet"
-        />
+        {/* Preconnect to important origins */}
+        <link rel="preconnect" href="https://api.shonra.com" />
+        <link rel="preconnect" href="https://cf.shopee.co.th" />
       </head>
-      <body>
+      <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>
     </html>

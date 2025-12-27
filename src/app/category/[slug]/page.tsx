@@ -735,9 +735,9 @@ export default function CategoryPage() {
             <div className="text-6xl mb-4">
               {hasSearched ? '🔍' : '📦'}
             </div>
-            <h3 className="text-xl font-bold text-gray-700 mb-2">
+            <h2 className="text-xl font-bold text-gray-700 mb-2">
               {hasSearched ? 'ไม่พบสินค้าที่ค้นหา' : 'ยังไม่มีสินค้าในหมวดหมู่นี้'}
-            </h3>
+            </h2>
             <p className="text-gray-500 mb-6">
               {hasSearched 
                 ? `ลองค้นหาด้วยคำอื่นหรือเลือกหมวดหมู่อื่น`

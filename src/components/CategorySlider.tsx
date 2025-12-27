@@ -103,11 +103,14 @@ export default function CategorySlider({
       // Prevent default vertical scroll
       e.preventDefault();
       
-      // Scroll horizontally based on wheel delta
-      container.scrollLeft += e.deltaY;
-      
-      // Update scroll buttons visibility
-      checkScrollButtons();
+      requestAnimationFrame(() => {
+        if (container) {
+          // Scroll horizontally based on wheel delta
+          container.scrollLeft += e.deltaY;
+          // Update scroll buttons visibility
+          checkScrollButtons();
+        }
+      });
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false });
@@ -159,10 +162,10 @@ export default function CategorySlider({
           <button
             ref={activeCategory === 'all' ? activeCategoryRef : null}
             onClick={() => onCategoryChange('all')}
-            className={`flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-2 lg:py-2.5 rounded-full whitespace-nowrap font-medium text-xs lg:text-sm transition-all duration-200 flex-shrink-0 ${
+            className={`flex-shrink-0 flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-2 lg:py-2.5 rounded-full whitespace-nowrap font-medium text-xs lg:text-sm transition-all duration-200 ${
               activeCategory === 'all'
-                ? 'bg-red-500 text-white shadow-md hover:bg-red-600'
-                : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
+                ? 'bg-red-600 text-white shadow-md hover:bg-red-700'
+                : 'bg-gray-100 text-gray-800 border border-gray-200 hover:bg-gray-200'
             }`}
           >
             <LayoutGrid size={14} className="lg:w-4 lg:h-4" />
@@ -175,10 +178,10 @@ export default function CategorySlider({
               key={category.id}
               ref={activeCategory === category.id ? activeCategoryRef : null}
               onClick={() => onCategoryChange(category.id)}
-              className={`flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-2 lg:py-2.5 rounded-full whitespace-nowrap font-medium text-xs lg:text-sm transition-all duration-200 flex-shrink-0 ${
+              className={`flex-shrink-0 flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-2 lg:py-2.5 rounded-full whitespace-nowrap font-medium text-xs lg:text-sm transition-all duration-200 ${
                 activeCategory === category.id
-                  ? 'bg-red-500 text-white shadow-md hover:bg-red-600'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  ? 'bg-red-600 text-white shadow-md hover:bg-red-700'
+                  : 'bg-gray-100 text-gray-800 border border-gray-200 hover:bg-gray-200'
               }`}
             >
               <span className="text-sm lg:text-base">{getCategoryIcon(category.name)}</span>
@@ -187,7 +190,7 @@ export default function CategorySlider({
                 <span className={`text-xs font-semibold px-1.5 lg:px-2 py-0.5 rounded-full ${
                   activeCategory === category.id
                     ? 'bg-white/20 text-white'
-                    : 'bg-gray-200 text-gray-600'
+                    : 'bg-gray-300 text-gray-700'
                 }`}>
                   {category.product_count}
                 </span>

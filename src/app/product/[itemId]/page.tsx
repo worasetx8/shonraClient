@@ -598,7 +598,7 @@ export default function ProductDetailPage() {
                   />
                   {/* Discount Badge - Top Right */}
                   {product.discount_rate > 0 && (
-                    <div className="absolute top-2 right-2 bg-orange-400 text-white text-xs lg:text-sm font-bold px-2 py-1 rounded-md shadow-lg z-10">
+                    <div className="absolute top-2 right-2 bg-red-600 text-white text-xs lg:text-sm font-bold px-2 py-1 rounded-md shadow-lg z-10">
                       {Math.round(product.discount_rate)}%
                     </div>
                   )}
@@ -626,7 +626,7 @@ export default function ProductDetailPage() {
                       {formatPrice(product.price)}
                     </div>
                     {originalPrice && (
-                      <div className="text-xs lg:text-sm text-gray-400 line-through">
+                      <div className="text-xs lg:text-sm text-gray-500 line-through">
                         {formatPrice(originalPrice)}
                       </div>
                     )}
@@ -656,9 +656,9 @@ export default function ProductDetailPage() {
               </div>
             </div>
             <div className="lg:col-span-4 bg-white p-3 lg:p-4 rounded-lg lg:rounded-xl shadow-md lg:flex lg:flex-col lg:min-h-0">
-              <h3 className="font-semibold text-sm lg:text-base mb-2 lg:mb-3 lg:flex-shrink-0">
+              <h2 className="font-semibold text-sm lg:text-base mb-2 lg:mb-3 lg:flex-shrink-0">
                 สินค้าในหมวดนี้
-              </h3>
+              </h2>
               <div className="lg:hidden overflow-x-auto pb-2 -mx-3 px-3">
                 <div className="flex gap-2">
                   {relatedProducts.map((p) => (

@@ -2,26 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Inter Font Application - Default for all text including logo and content */
-* {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-html,
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-/* Ensure all text elements use Inter */
-h1, h2, h3, h4, h5, h6,
-p, span, div, a, button, input, textarea, select,
-label, li, td, th {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
 /* Logo font - use Cardo (Google Font) */
 .logo-font {
-  font-family: 'Cardo', Georgia, serif;
+  @apply font-serif;
+  font-display: swap;
 }
 
 /* Custom utilities */

@@ -1083,15 +1083,22 @@ export default function NewHomePage() {
     const container = flashSaleContainerRef.current;
     if (!container) return;
 
-    // Use requestAnimationFrame to batch DOM reads and avoid forced reflow
+    // Use requestAnimationFrame with throttling to avoid stacking
+    let ticking = false;
     const checkScroll = () => {
-      requestAnimationFrame(() => {
-        // Batch all DOM reads together
-        const { scrollTop, scrollHeight, clientHeight } = container;
-        // ถ้ายัง scroll ได้อีก (มีเนื้อหาเพิ่มเติม) และยังไม่ scroll ถึงด้านล่าง
-        const hasMore = scrollHeight > clientHeight && scrollTop + clientHeight < scrollHeight - 10;
-        setHasMoreFlashSale(hasMore);
-      });
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (container) {
+            // Batch all DOM reads together
+            const { scrollTop, scrollHeight, clientHeight } = container;
+            // ถ้ายัง scroll ได้อีก (มีเนื้อหาเพิ่มเติม) และยังไม่ scroll ถึงด้านล่าง
+            const hasMore = scrollHeight > clientHeight && scrollTop + clientHeight < scrollHeight - 10;
+            setHasMoreFlashSale(hasMore);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     // ตรวจสอบเมื่อ scroll
@@ -1124,11 +1131,18 @@ export default function NewHomePage() {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    // Use requestAnimationFrame to batch DOM reads and avoid forced reflow
+    // Use requestAnimationFrame with throttling to avoid stacking
+    let ticking = false;
     const handleScroll = () => {
-      requestAnimationFrame(() => {
-        setShowBackToTop(container.scrollTop > 400);
-      });
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (container) {
+            setShowBackToTop(container.scrollTop > 400);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     container.addEventListener('scroll', handleScroll, { passive: true });
@@ -1924,7 +1938,7 @@ export default function NewHomePage() {
                       ฿{product.price?.toLocaleString()}
                     </span>
                     {product.originalPrice && product.originalPrice !== product.price && (
-                      <span className="text-gray-400 line-through text-[10px]">
+                      <span className="text-gray-500 line-through text-[10px]">
                         ฿{product.originalPrice?.toLocaleString()}
                       </span>
                     )}
@@ -1941,7 +1955,7 @@ export default function NewHomePage() {
                         style={{ width: `${product.soldPercentage || 0}%` }}
                       ></div>
                     </div>
-                    <span className="text-[10px] text-gray-500 whitespace-nowrap">
+                    <span className="text-[10px] text-gray-600 whitespace-nowrap">
                       {product.soldCount?.toLocaleString() || 0}
                     </span>
                   </div>
@@ -2127,7 +2141,7 @@ export default function NewHomePage() {
                             ฿{product.price?.toLocaleString()}
                           </span>
                           {product.originalPrice && product.originalPrice !== product.price && (
-                            <span className="text-gray-400 line-through text-[10px]">
+                            <span className="text-gray-500 line-through text-[10px]">
                               ฿{product.originalPrice?.toLocaleString()}
                             </span>
                           )}
@@ -2144,7 +2158,7 @@ export default function NewHomePage() {
                               style={{ width: `${product.soldPercentage || 0}%` }}
                             ></div>
                           </div>
-                          <span className="text-[10px] text-gray-500 whitespace-nowrap">
+                          <span className="text-[10px] text-gray-600 whitespace-nowrap">
                             {product.soldCount?.toLocaleString() || 0}
                           </span>
                         </div>
