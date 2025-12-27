@@ -13,12 +13,9 @@ const nextConfig = {
   // Enable source maps for production (helps with debugging and Lighthouse insights)
   // Source maps are only loaded when DevTools are open, so they don't affect performance
   productionBrowserSourceMaps: true,
-  // Modularize imports for better tree-shaking
-  modularizeImports: {
-    'lucide-react': {
-      transform: 'lucide-react/dist/esm/icons/{{member}}',
-      skipDefaultConversion: true,
-    },
+  // Experimental optimizations
+  experimental: {
+    optimizePackageImports: ['@chakra-ui/react', '@chakra-ui/icons', 'lucide-react', 'framer-motion', 'lodash'],
   },
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {

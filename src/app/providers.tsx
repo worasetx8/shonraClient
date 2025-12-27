@@ -1,6 +1,7 @@
 'use client';
 
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { LazyMotion, domAnimation } from 'framer-motion';
 
 export const theme = extendTheme({
   fonts: {
