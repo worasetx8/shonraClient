@@ -266,7 +266,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product, priority = fal
               alt={product.productName}
               width={400}
               height={400}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                     style={{
                       width: '100%',
                       height: '100%',
@@ -387,7 +387,7 @@ const ModernProductCard: React.FC<ProductCardProps> = ({ product, priority = fal
                 alt={product.productName}
                 width={400}
                 height={400}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                 style={{
                   width: '100%',
                   height: '100%',
