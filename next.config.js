@@ -30,60 +30,6 @@ const nextConfig = {
         usedExports: true,
         sideEffects: false,
       };
-      
-      // Split chunks for better caching
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          // Vendor chunk for node_modules (excluding framework and large libs handled separately)
-          vendor: {
-            name: 'vendor',
-            chunks: 'all',
-            test: /[\\/]node_modules[\\/](?!(@chakra-ui|framer-motion|lucide-react|next|react|react-dom|scheduler))[\\/]/,
-            priority: 20,
-          },
-          // Common chunk for shared code
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
-            priority: 10,
-            reuseExistingChunk: true,
-            enforce: true,
-          },
-          // React and Framework chunk
-          framework: {
-            name: 'framework',
-            test: /[\\/]node_modules[\\/](next|react|react-dom|scheduler)[\\/]/,
-            chunks: 'all',
-            priority: 40,
-            enforce: true,
-          },
-          // Chakra UI chunk (large library)
-          chakra: {
-            name: 'chakra',
-            test: /[\\/]node_modules[\\/]@chakra-ui[\\/]/,
-            chunks: 'all',
-            priority: 30,
-          },
-          // Framer Motion chunk
-          framer: {
-            name: 'framer',
-            test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
-            chunks: 'all',
-            priority: 30,
-          },
-          // Lucide icons chunk
-          lucide: {
-            name: 'lucide',
-            test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
-            chunks: 'all',
-            priority: 30,
-          },
-        },
-      };
     }
     
     return config;
