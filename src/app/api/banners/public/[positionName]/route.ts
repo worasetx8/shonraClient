@@ -10,8 +10,6 @@ export async function GET(request: NextRequest, { params }: { params: { position
 
     const BACKEND_URL = getBackendUrl();
     const url = `${BACKEND_URL}/api/banners/public/${encodeURIComponent(decodedPositionName)}`;
-    
-    console.log(`[Banner API] Fetching from: ${url}`); // Debug Log
 
     // Check if this is a hard refresh (F5) - browser sends Cache-Control: no-cache or Pragma: no-cache
     const cacheControl = request.headers.get("cache-control");
@@ -21,8 +19,7 @@ export async function GET(request: NextRequest, { params }: { params: { position
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        "User-Agent": "SHONRA-Frontend-Server/1.0" // Add specific User-Agent
+        "Content-Type": "application/json"
       },
       // If hard refresh, bypass cache. Otherwise, use Next.js Data Cache for 5 minutes
       ...(isHardRefresh
@@ -61,9 +58,9 @@ export async function GET(request: NextRequest, { params }: { params: { position
         // Fix URLs that point to frontend domain instead of backend API
         // Convert https://shonra.com/api/uploads/... to https://api.shonra.com/api/uploads/...
         if (imageUrl.startsWith('https://shonra.com/api/uploads/') || imageUrl.startsWith('http://shonra.com/api/uploads/')) {
-          const publicBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://api.shonra.com";
+          const backendUrl = getBackendUrl();
           const path = imageUrl.replace(/^https?:\/\/shonra\.com/, '');
-          return `${publicBackendUrl}${path}`;
+          return `${backendUrl}${path}`;
         }
         
         // Skip external URLs that are already correct (pointing to api.shonra.com or other domains)
@@ -71,20 +68,20 @@ export async function GET(request: NextRequest, { params }: { params: { position
           return imageUrl;
         }
         
-        // In production, convert relative paths to absolute backend URLs (Public URL)
+        // In production, convert relative paths to absolute backend URLs
         // Backend returns: /api/uploads/banners/filename.png
         // Convert to: https://api.shonra.com/api/uploads/banners/filename.png
         if (imageUrl.startsWith('/api/uploads/banners/')) {
-          const publicBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://api.shonra.com";
-          return `${publicBackendUrl}${imageUrl}`;
+          const backendUrl = getBackendUrl();
+          return `${backendUrl}${imageUrl}`;
         }
         
         // If it's a full backend URL, extract and use it
         if (imageUrl.includes('/api/uploads/banners/')) {
           const match = imageUrl.match(/\/api\/uploads\/banners\/[^/]+$/);
           if (match) {
-            const publicBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://api.shonra.com";
-            return `${publicBackendUrl}${match[0]}`;
+            const backendUrl = getBackendUrl();
+            return `${backendUrl}${match[0]}`;
           }
         }
         

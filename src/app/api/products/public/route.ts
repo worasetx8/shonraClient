@@ -31,15 +31,10 @@ export async function GET(request: NextRequest) {
 
     const BACKEND_URL = getBackendUrl();
     const url = `${BACKEND_URL}/api/products/public?${new URLSearchParams(params)}`;
-    
-    console.log(`[Public Products API] Fetching from: ${url}`); // Debug Log
 
     const response = await fetch(url, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": "SHONRA-Frontend-Server/1.0"
-      },
+      headers: createDefaultHeaders(),
       cache: "no-store"
     });
 
